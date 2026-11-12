@@ -1,0 +1,315 @@
+{
+  "status": "complete",
+  "generated_at": "2026-11-12T17:54:30.299430+00:00",
+  "evaluation_split": "test",
+  "data_review_status": "preliminary_human_unverified",
+  "frozen_sha256": {
+    "backend\\models\\text_clf.joblib": "89899292b6fff1d3ccb4883ee6a9ae591866eccd7aa200afce9db51bb2d2fce7",
+    "backend\\models\\url_clf.joblib": "45bf482a425b274c26957287d4acee10f8b64d0d85a86604de8d0f337c96ba0b",
+    "backend\\app\\config.py": "521db5c029bab27700d7bb6d75ebf9a083a556f577a678aedaa8c06dd0af584c",
+    "backend\\app\\services\\risk_engine.py": "4348c87176768703d77aa285497e860c68c195cf96191fcef15a445846d2265b",
+    "backend\\app\\resources\\rules.yaml": "c2ba83b8eb915b5eeb4290d54f2e2880de99f48dc91425bf17e867f133578411"
+  },
+  "text_splits": {
+    "train": {
+      "rows": 20539,
+      "class_counts": {
+        "normal": 16833,
+        "abusive": 3252,
+        "scam": 454
+      },
+      "membership_sha256": "aac843ab7ac8f14e8b490bdb5a51a24cc57de84610d99dc965784995aa737308"
+    },
+    "val": {
+      "rows": 4401,
+      "class_counts": {
+        "normal": 3607,
+        "abusive": 697,
+        "scam": 97
+      },
+      "membership_sha256": "ee99d8a5a1362f6ef72cea31e5b723bded7f8c7a2841099329017b5d00529741"
+    },
+    "test": {
+      "rows": 4402,
+      "class_counts": {
+        "normal": 3608,
+        "abusive": 697,
+        "scam": 97
+      },
+      "membership_sha256": "1163170be7836682fd3532d14a90a01f3c509ca5aeae1689a4a14ab1d0515ce2"
+    },
+    "custom_holdout": {
+      "rows": 16,
+      "class_counts": {
+        "normal": 6,
+        "abusive": 0,
+        "scam": 10
+      },
+      "membership_sha256": "fb8b1f427813508d240e5bd21f0c3c61659195cd7a5feb972b8599a7ae9299c5"
+    }
+  },
+  "url_splits": {
+    "train": {
+      "rows": 164280,
+      "class_counts": {
+        "0": 94394,
+        "1": 69886
+      },
+      "membership_sha256": "e42d62c722ef31eb3cc898fca8f29bc9efb2695f597ea633839910a6f2f24a18"
+    },
+    "val": {
+      "rows": 35203,
+      "class_counts": {
+        "0": 20227,
+        "1": 14976
+      },
+      "membership_sha256": "85d27337c2deed0f3d54fec4c9a2675f98bed295a2ac9d72eb71bf4e92de7773"
+    },
+    "test": {
+      "rows": 35204,
+      "class_counts": {
+        "0": 20228,
+        "1": 14976
+      },
+      "membership_sha256": "cc5339163daa3f0347bdb5bfbfc28f03a0c9bf8e6d744246d199cef598410df0"
+    }
+  },
+  "limitations": "Final numbers for frozen artifacts on source-specific proxy labels; synthetic custom labels are not human-reviewed. No tuning or model changes may use these test results. Custom hold-out is template-family synthetic data, not realistic external prevalence.",
+  "text_test": {
+    "ml": {
+      "rows": 4402,
+      "macro_f1": 0.9215540946419827,
+      "accuracy": 0.9579736483416629,
+      "label_order": [
+        "normal",
+        "abusive",
+        "scam"
+      ],
+      "confusion_matrix": [
+        [
+          3534,
+          70,
+          4
+        ],
+        [
+          99,
+          598,
+          0
+        ],
+        [
+          12,
+          0,
+          85
+        ]
+      ],
+      "per_class": {
+        "normal": {
+          "p": 0.9695473251028807,
+          "r": 0.979490022172949,
+          "f1": 0.9744933131118158,
+          "support": 3608.0
+        },
+        "abusive": {
+          "p": 0.8952095808383234,
+          "r": 0.8579626972740315,
+          "f1": 0.8761904761904762,
+          "support": 697.0
+        },
+        "scam": {
+          "p": 0.9550561797752809,
+          "r": 0.8762886597938144,
+          "f1": 0.9139784946236559,
+          "support": 97.0
+        }
+      }
+    },
+    "hybrid": {
+      "rows": 4402,
+      "macro_f1": 0.9140392459589627,
+      "accuracy": 0.9570649704679691,
+      "label_order": [
+        "normal",
+        "abusive",
+        "scam"
+      ],
+      "confusion_matrix": [
+        [
+          3534,
+          70,
+          4
+        ],
+        [
+          99,
+          594,
+          4
+        ],
+        [
+          12,
+          0,
+          85
+        ]
+      ],
+      "per_class": {
+        "normal": {
+          "p": 0.9695473251028807,
+          "r": 0.979490022172949,
+          "f1": 0.9744933131118158,
+          "support": 3608.0
+        },
+        "abusive": {
+          "p": 0.8945783132530121,
+          "r": 0.8522238163558106,
+          "f1": 0.8728875826598089,
+          "support": 697.0
+        },
+        "scam": {
+          "p": 0.9139784946236559,
+          "r": 0.8762886597938144,
+          "f1": 0.8947368421052632,
+          "support": 97.0
+        }
+      }
+    },
+    "risk_level_counts": {
+      "low": 3664,
+      "medium": 644,
+      "high": 94
+    },
+    "batch_ml_ms_per_row": 1.9443252158060549
+  },
+  "custom_holdout": {
+    "ml": {
+      "rows": 16,
+      "macro_f1": 0.7922077922077921,
+      "accuracy": 0.8125,
+      "label_order": [
+        "normal",
+        "abusive",
+        "scam"
+      ],
+      "confusion_matrix": [
+        [
+          4,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          9
+        ]
+      ],
+      "per_class": {
+        "normal": {
+          "p": 0.8,
+          "r": 0.6666666666666666,
+          "f1": 0.7272727272727273,
+          "support": 6.0
+        },
+        "abusive": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "support": 0.0
+        },
+        "scam": {
+          "p": 0.8181818181818182,
+          "r": 0.9,
+          "f1": 0.8571428571428571,
+          "support": 10.0
+        }
+      }
+    },
+    "hybrid": {
+      "rows": 16,
+      "macro_f1": 0.7922077922077921,
+      "accuracy": 0.8125,
+      "label_order": [
+        "normal",
+        "abusive",
+        "scam"
+      ],
+      "confusion_matrix": [
+        [
+          4,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          9
+        ]
+      ],
+      "per_class": {
+        "normal": {
+          "p": 0.8,
+          "r": 0.6666666666666666,
+          "f1": 0.7272727272727273,
+          "support": 6.0
+        },
+        "abusive": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "support": 0.0
+        },
+        "scam": {
+          "p": 0.8181818181818182,
+          "r": 0.9,
+          "f1": 0.8571428571428571,
+          "support": 10.0
+        }
+      }
+    },
+    "risk_level_counts": {
+      "low": 6,
+      "medium": 7,
+      "high": 3
+    },
+    "batch_ml_ms_per_row": 3.6961125006200746
+  },
+  "url_test": {
+    "rows": 35204,
+    "macro_f1": 0.9959868196013393,
+    "accuracy": 0.9960799909101239,
+    "label_order": [
+      0,
+      1
+    ],
+    "confusion_matrix": [
+      [
+        20215,
+        13
+      ],
+      [
+        125,
+        14851
+      ]
+    ],
+    "per_class": {
+      "0": {
+        "p": 0.9938544739429696,
+        "r": 0.9993573264781491,
+        "f1": 0.9965983040820351,
+        "support": 20228.0
+      },
+      "1": {
+        "p": 0.9991254036598493,
+        "r": 0.991653311965812,
+        "f1": 0.9953753351206435,
+        "support": 14976.0
+      }
+    }
+  }
+}

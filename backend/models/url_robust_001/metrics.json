@@ -1,0 +1,214 @@
+{
+  "evaluation_split": "validation",
+  "test_evaluated": false,
+  "source": "https://archive.ics.uci.edu/static/public/967/phiusiil%2Bphishing%2Burl%2Bdataset.zip",
+  "archive_sha256": "0a639fd03aea6308c5b1c10c92aa23c2ce1505447a9137271865cd0badc9a59a",
+  "frozen_splits": {
+    "train": {
+      "rows": 164280,
+      "class_counts": {
+        "0": 94394,
+        "1": 69886
+      },
+      "membership_sha256": "e42d62c722ef31eb3cc898fca8f29bc9efb2695f597ea633839910a6f2f24a18"
+    },
+    "val": {
+      "rows": 35203,
+      "class_counts": {
+        "0": 20227,
+        "1": 14976
+      },
+      "membership_sha256": "85d27337c2deed0f3d54fec4c9a2675f98bed295a2ac9d72eb71bf4e92de7773"
+    },
+    "test": {
+      "rows": 35204,
+      "class_counts": {
+        "0": 20228,
+        "1": 14976
+      },
+      "membership_sha256": "cc5339163daa3f0347bdb5bfbfc28f03a0c9bf8e6d744246d199cef598410df0"
+    }
+  },
+  "training_rows_after_augmentation": 258674,
+  "original_train_rows": 164280,
+  "training_shape_audit": {
+    "0": {
+      "rows": 94394,
+      "non_root_path_fraction": 0.0,
+      "https_fraction": 1.0
+    },
+    "1": {
+      "rows": 69886,
+      "non_root_path_fraction": 0.27144206278796895,
+      "https_fraction": 0.48408837249234465
+    }
+  },
+  "rows": [
+    {
+      "name": "deployed_before",
+      "original_validation": {
+        "macro_f1": 0.9963652150595084,
+        "per_class": {
+          "benign": {
+            "p": 0.9944898159992128,
+            "r": 0.9993572947050972,
+            "f1": 0.9969176139866348
+          },
+          "phishing": {
+            "p": 0.9991261679101969,
+            "r": 0.9925213675213675,
+            "f1": 0.995812816132382
+          }
+        },
+        "confusion_matrix": [
+          [
+            20214,
+            13
+          ],
+          [
+            112,
+            14864
+          ]
+        ],
+        "benign_false_positive_rate": 0.0006427052949028526
+      },
+      "synthetic_path_stress": {
+        "macro_f1": 0.2968821778816386,
+        "per_class": {
+          "benign": {
+            "p": 0.0,
+            "r": 0.0,
+            "f1": 0.0
+          },
+          "phishing": {
+            "p": 0.42358439485908067,
+            "r": 0.9925213675213675,
+            "f1": 0.5937643557632772
+          }
+        },
+        "confusion_matrix": [
+          [
+            0,
+            20227
+          ],
+          [
+            112,
+            14864
+          ]
+        ],
+        "benign_false_positive_rate": 1.0
+      },
+      "unseen_hostname_validation": {
+        "macro_f1": 0.9975016674940342,
+        "per_class": {
+          "benign": {
+            "p": 0.9968435588873545,
+            "r": 0.9993572311495673,
+            "f1": 0.9980988123750031
+          },
+          "phishing": {
+            "p": 0.9989526264904931,
+            "r": 0.99486479980743,
+            "f1": 0.9969045226130653
+          }
+        },
+        "confusion_matrix": [
+          [
+            20212,
+            13
+          ],
+          [
+            64,
+            12399
+          ]
+        ],
+        "benign_false_positive_rate": 0.0006427688504326329
+      }
+    },
+    {
+      "name": "url_robust_gb",
+      "original_validation": {
+        "macro_f1": 0.9943851987364934,
+        "per_class": {
+          "benign": {
+            "p": 0.9915112855740923,
+            "r": 0.9990112226232264,
+            "f1": 0.9952471248799468
+          },
+          "phishing": {
+            "p": 0.9986507454631316,
+            "r": 0.9884481837606838,
+            "f1": 0.9935232725930401
+          }
+        },
+        "confusion_matrix": [
+          [
+            20207,
+            20
+          ],
+          [
+            173,
+            14803
+          ]
+        ],
+        "benign_false_positive_rate": 0.0009887773767736194
+      },
+      "synthetic_path_stress": {
+        "macro_f1": 0.6930919251954173,
+        "per_class": {
+          "benign": {
+            "p": 0.9826757460444623,
+            "r": 0.48514361991397636,
+            "f1": 0.6495879257273359
+          },
+          "phishing": {
+            "p": 0.5870246262442004,
+            "r": 0.9884481837606838,
+            "f1": 0.7365959246634987
+          }
+        },
+        "confusion_matrix": [
+          [
+            9813,
+            10414
+          ],
+          [
+            173,
+            14803
+          ]
+        ],
+        "benign_false_positive_rate": 0.5148563800860236
+      },
+      "unseen_hostname_validation": {
+        "macro_f1": 0.9957794766624161,
+        "per_class": {
+          "benign": {
+            "p": 0.9945852818114693,
+            "r": 0.9990111248454883,
+            "f1": 0.9967932905772077
+          },
+          "phishing": {
+            "p": 0.9983835771437808,
+            "r": 0.9911738746690203,
+            "f1": 0.9947656627476245
+          }
+        },
+        "confusion_matrix": [
+          [
+            20205,
+            20
+          ],
+          [
+            110,
+            12353
+          ]
+        ],
+        "benign_false_positive_rate": 0.000988875154511743
+      }
+    }
+  ],
+  "promotion_gate_passed": true,
+  "gate": "Original macro-F1/recall drop no greater than .02, and lower synthetic benign false-positive rate.",
+  "limits": "Benign path variants inherit source labels as an assumption; this is a synthetic stress test, not external accuracy. Unseen hostname is not registrable-domain separation. Test only used for membership exclusion, never inference.",
+  "source_artifact_sha256": "45bf482a425b274c26957287d4acee10f8b64d0d85a86604de8d0f337c96ba0b"
+}

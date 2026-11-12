@@ -1,0 +1,52 @@
+{
+  "status": "preliminary_human_unverified",
+  "corpus_storage": "memory_only",
+  "split_seed": 42,
+  "custom_policy": "one representative per template family",
+  "source_inventory_sha256": "8f7053835428fa7afcffac6da4fdad0ddd1c49eb8f774b38bbb8a8b98198f438",
+  "custom_draft_sha256": "e71e2c6d2a5ce09ac2e63bdab3c81d91f2008b7144a718d5e63a05065501c106",
+  "runner_sha256": "7a607cfefd780e7a19a719233e36b370d901212d41ac576d9038eecc54f2cdbc",
+  "deduplication": {
+    "conflicting_rows": 3,
+    "duplicate_rows": 1085
+  },
+  "splits": {
+    "train": {
+      "rows": 20539,
+      "class_counts": {
+        "normal": 16833,
+        "abusive": 3252,
+        "scam": 454
+      },
+      "membership_sha256": "aac843ab7ac8f14e8b490bdb5a51a24cc57de84610d99dc965784995aa737308"
+    },
+    "val": {
+      "rows": 4401,
+      "class_counts": {
+        "normal": 3607,
+        "abusive": 697,
+        "scam": 97
+      },
+      "membership_sha256": "ee99d8a5a1362f6ef72cea31e5b723bded7f8c7a2841099329017b5d00529741"
+    },
+    "test": {
+      "rows": 4402,
+      "class_counts": {
+        "normal": 3608,
+        "abusive": 697,
+        "scam": 97
+      },
+      "membership_sha256": "1163170be7836682fd3532d14a90a01f3c509ca5aeae1689a4a14ab1d0515ce2"
+    },
+    "custom_holdout": {
+      "rows": 16,
+      "class_counts": {
+        "normal": 6,
+        "abusive": 0,
+        "scam": 10
+      },
+      "membership_sha256": "fb8b1f427813508d240e5bd21f0c3c61659195cd7a5feb972b8599a7ae9299c5"
+    }
+  },
+  "test_evaluated": false
+}

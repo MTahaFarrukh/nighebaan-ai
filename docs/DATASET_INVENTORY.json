@@ -1,0 +1,119 @@
+{
+  "audited_at": "2026-11-09T19:09:51.017615+05:00",
+  "status": "inventory_only_no_corpus_saved",
+  "privacy": "Original corpus bytes processed only in memory; no text or identifiers persisted.",
+  "evaluation": "No training or evaluation; upstream partitions are inventoried, not project test splits.",
+  "sources": [
+    {
+      "source": "uci",
+      "url": "https://archive.ics.uci.edu/static/public/458/roman%2Burdu%2Bdata%2Bset.zip",
+      "license": "CC BY 4.0",
+      "archive_bytes": 1628491,
+      "archive_sha256": "78e7cd1d7b0dc8e960a52c9151fc3114c70a3809111d3421581bbad931a6f5a8",
+      "member_bytes": 1628349,
+      "member_sha256": "d9b54d3685b6ef691cb4a2cc0783fc189dcfa0560cca9afec1099b015c798c7c",
+      "rows": 20229,
+      "empty_text_rows": 113,
+      "malformed_rows": 0,
+      "original_label_counts": {
+        "negative": 5286,
+        "neutral": 8929,
+        "positive": 6013,
+        "unknown": 1
+      },
+      "mapped_class_counts_before_dedup": {
+        "normal": 14829
+      },
+      "mapped_duplicate_text_rows": 477,
+      "encoding": "utf-8-sig"
+    },
+    {
+      "source": "sms",
+      "url": "https://archive.ics.uci.edu/static/public/228/sms%2Bspam%2Bcollection.zip",
+      "license": "CC BY 4.0",
+      "archive_bytes": 203415,
+      "archive_sha256": "1587ea43e58e82b14ff1f5425c88e17f8496bfcdb67a583dbff9eefaf9963ce3",
+      "member_bytes": 477907,
+      "member_sha256": "7d039a24a6083ed9ef0f806ebad56bbb976e3aeb8de05669173bfdc4996c239d",
+      "rows": 5574,
+      "empty_text_rows": 0,
+      "malformed_rows": 0,
+      "original_label_counts": {
+        "ham": 4827,
+        "spam": 747
+      },
+      "mapped_class_counts_before_dedup": {
+        "normal": 4827,
+        "scam": 747
+      },
+      "mapped_duplicate_text_rows": 414,
+      "encoding": "utf-8-sig"
+    },
+    {
+      "source": "ruhsold",
+      "upstream_partition": "train",
+      "url": "https://raw.githubusercontent.com/haroonshakeel/roman_urdu_hate_speech/f2f66aa38f59c71254fae57649ada9aeb5d9d1bd/task_1_train.tsv",
+      "license": "MIT",
+      "upstream_commit": "f2f66aa38f59c71254fae57649ada9aeb5d9d1bd",
+      "member_bytes": 668097,
+      "member_sha256": "6236116609a80aaf6b9c7fab8f8d236b148d4638c6255a178c0d79d7766aa3b4",
+      "rows": 7209,
+      "empty_text_rows": 0,
+      "malformed_rows": 0,
+      "original_label_counts": {
+        "0": 3358,
+        "1": 3851
+      },
+      "mapped_class_counts_before_dedup": {
+        "abusive": 3358,
+        "normal": 3851
+      },
+      "mapped_duplicate_text_rows": 13,
+      "encoding": "utf-8-sig"
+    },
+    {
+      "source": "ruhsold",
+      "upstream_partition": "validation",
+      "url": "https://raw.githubusercontent.com/haroonshakeel/roman_urdu_hate_speech/f2f66aa38f59c71254fae57649ada9aeb5d9d1bd/task_1_validation.tsv",
+      "license": "MIT",
+      "upstream_commit": "f2f66aa38f59c71254fae57649ada9aeb5d9d1bd",
+      "member_bytes": 73747,
+      "member_sha256": "eff8a097b0d8974bec2158b8e0512b43537cbf796c828ca64fd3841fc8dee0cb",
+      "rows": 801,
+      "empty_text_rows": 0,
+      "malformed_rows": 0,
+      "original_label_counts": {
+        "0": 373,
+        "1": 428
+      },
+      "mapped_class_counts_before_dedup": {
+        "abusive": 373,
+        "normal": 428
+      },
+      "mapped_duplicate_text_rows": 0,
+      "encoding": "utf-8-sig"
+    },
+    {
+      "source": "ruhsold",
+      "upstream_partition": "test",
+      "url": "https://raw.githubusercontent.com/haroonshakeel/roman_urdu_hate_speech/f2f66aa38f59c71254fae57649ada9aeb5d9d1bd/task_1_test.tsv",
+      "license": "MIT",
+      "upstream_commit": "f2f66aa38f59c71254fae57649ada9aeb5d9d1bd",
+      "member_bytes": 186093,
+      "member_sha256": "c08a90dd63e35a0eb3737c90f7bc09917b2832e56ffab8b37fff89499a419fe2",
+      "rows": 2003,
+      "empty_text_rows": 0,
+      "malformed_rows": 0,
+      "original_label_counts": {
+        "0": 933,
+        "1": 1070
+      },
+      "mapped_class_counts_before_dedup": {
+        "abusive": 933,
+        "normal": 1070
+      },
+      "mapped_duplicate_text_rows": 2,
+      "encoding": "utf-8-sig"
+    }
+  ]
+}

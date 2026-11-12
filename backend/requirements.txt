@@ -8,3 +8,12 @@ numpy
 joblib
 pytest
 httpx
+
+# Local media extraction (install CPU torch first; see docs/MEDIA.md)
+python-multipart
+pymupdf
+pillow
+filetype
+imageio-ffmpeg
+faster-whisper
+easyocr

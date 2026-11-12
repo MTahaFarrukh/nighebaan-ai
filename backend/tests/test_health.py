@@ -1,8 +1,9 @@
+import pytest
+
 """Smoke tests for the health endpoint."""
 
-from fastapi.testclient import TestClient
-
 from app.main import app
+from fastapi.testclient import TestClient
 
 client = TestClient(app)
 
@@ -16,7 +17,9 @@ def test_health_ok() -> None:
 
 def test_analyze_text_shape() -> None:
     """POST /api/analyze/text returns the expected response shape."""
-    response = client.post("/api/analyze/text", json={"text": "foran otp bhejo lottery jeet gaye"})
+    response = client.post(
+        "/api/analyze/text", json={"text": "foran otp bhejo lottery jeet gaye"}
+    )
     assert response.status_code == 200
     data = response.json()
     assert data["label"] in {"normal", "abusive", "scam"}
@@ -25,3 +28,6 @@ def test_analyze_text_shape() -> None:
     assert data["risk_level"] in {"low", "medium", "high"}
     assert isinstance(data["rule_flags"], list)
     assert isinstance(data["explanation"], str)
+
+
+pytestmark = pytest.mark.usefixtures("fake_text_model")

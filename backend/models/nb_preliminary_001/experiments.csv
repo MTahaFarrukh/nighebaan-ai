@@ -1,0 +1,2 @@
+timestamp,model,params,val_macro_f1
+2026-11-09T15:43:18.119318+00:00,nb_baseline,"{""alpha"": 1.0, ""word_ngrams"": [1, 2], ""char_ngrams"": [2, 5]}",0.39240699394266326

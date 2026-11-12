@@ -1,0 +1,44 @@
+{
+  "raw_rows": 235795,
+  "usable_rows": 234687,
+  "discarded_rows": 1108,
+  "conflicting_url_groups": 1,
+  "random_state": 42,
+  "splits": {
+    "train": {
+      "rows": 164280,
+      "class_counts": {
+        "0": 94394,
+        "1": 69886
+      },
+      "membership_sha256": "e42d62c722ef31eb3cc898fca8f29bc9efb2695f597ea633839910a6f2f24a18"
+    },
+    "val": {
+      "rows": 35203,
+      "class_counts": {
+        "0": 20227,
+        "1": 14976
+      },
+      "membership_sha256": "85d27337c2deed0f3d54fec4c9a2675f98bed295a2ac9d72eb71bf4e92de7773"
+    },
+    "test": {
+      "rows": 35204,
+      "class_counts": {
+        "0": 20228,
+        "1": 14976
+      },
+      "membership_sha256": "cc5339163daa3f0347bdb5bfbfc28f03a0c9bf8e6d744246d199cef598410df0"
+    }
+  },
+  "validation_rows_with_training_hostname": 2515,
+  "source": "https://archive.ics.uci.edu/static/public/967/phiusiil%2Bphishing%2Burl%2Bdataset.zip",
+  "archive_sha256": "0a639fd03aea6308c5b1c10c92aa23c2ce1505447a9137271865cd0badc9a59a",
+  "license": "CC BY 4.0",
+  "attribution": "Prasad, A. & Chandra, S. (2024), PhiUSIIL Phishing URL (Website), UCI.",
+  "label_mapping": {
+    "source_0": "phishing=1",
+    "source_1": "benign=0"
+  },
+  "features": "Only static features computed from URL; supplied webpage/derived features excluded.",
+  "test_evaluated": false
+}

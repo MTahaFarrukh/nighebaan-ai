@@ -39,3 +39,12 @@ class AnalyzeResponse(BaseModel):
     explanation: str
     flagged_words: list[str]
     url_features: dict[str, float | int | bool | str] | None = None
+
+
+class FileAnalyzeResponse(AnalyzeResponse):
+    """In-memory preview only; extraction content is never persisted."""
+
+    modality: Literal["image", "pdf", "audio", "video"]
+    extracted_text: str
+    extraction_confidence: float | None = None
+    warnings: list[str] = Field(default_factory=list)

@@ -1,0 +1,329 @@
+{
+  "evaluation_split": "validation",
+  "data_review_status": "preliminary_human_unverified",
+  "test_evaluated": false,
+  "notes": [
+    "Fixed LR C selected previously on training CV; no per-variant retuning.",
+    "Raw means original text in memory, not normalize=False on already-cleaned text.",
+    "No-SMS removes SMS from training only; validation unchanged.",
+    "Word/char feature caps retained; word-only/char-only consequently have fewer features.",
+    "Rules/hybrid comparison deferred until M5; no test predictions."
+  ],
+  "rows": [
+    {
+      "name": "normalized_both",
+      "macro_f1": 0.9262617713260317,
+      "accuracy": 0.9561463303794592,
+      "latency_ms": 0.31334803453246646,
+      "per_class": {
+        "normal": {
+          "p": 0.9811161217587373,
+          "r": 0.9650679234821181,
+          "f1": 0.973025856044724
+        },
+        "abusive": {
+          "p": 0.8444148936170213,
+          "r": 0.9110473457675753,
+          "f1": 0.8764665286404417
+        },
+        "scam": {
+          "p": 0.9108910891089109,
+          "r": 0.9484536082474226,
+          "f1": 0.9292929292929293
+        }
+      },
+      "confusion_matrix": [
+        [
+          3481,
+          117,
+          9
+        ],
+        [
+          62,
+          635,
+          0
+        ],
+        [
+          5,
+          0,
+          92
+        ]
+      ],
+      "roc_auc_ovr": 0.9902741875626139,
+      "train_rows": 20539,
+      "val_rows": 4401,
+      "C": 2.0,
+      "evaluation_split": "validation"
+    },
+    {
+      "name": "word_only",
+      "macro_f1": 0.8999810818387649,
+      "accuracy": 0.948648034537605,
+      "latency_ms": 0.17099461486326922,
+      "per_class": {
+        "normal": {
+          "p": 0.9782239819004525,
+          "r": 0.958968672026615,
+          "f1": 0.9685006299874003
+        },
+        "abusive": {
+          "p": 0.8328877005347594,
+          "r": 0.8938307030129125,
+          "f1": 0.8622837370242215
+        },
+        "scam": {
+          "p": 0.7948717948717948,
+          "r": 0.9587628865979382,
+          "f1": 0.8691588785046729
+        }
+      },
+      "confusion_matrix": [
+        [
+          3459,
+          125,
+          23
+        ],
+        [
+          73,
+          623,
+          1
+        ],
+        [
+          4,
+          0,
+          93
+        ]
+      ],
+      "roc_auc_ovr": 0.9869940372322428,
+      "train_rows": 20539,
+      "val_rows": 4401,
+      "C": 2.0,
+      "evaluation_split": "validation"
+    },
+    {
+      "name": "char_only",
+      "macro_f1": 0.9125221664451609,
+      "accuracy": 0.948648034537605,
+      "latency_ms": 0.2976703249211462,
+      "per_class": {
+        "normal": {
+          "p": 0.983414355161567,
+          "r": 0.9534238979761575,
+          "f1": 0.9681869369369369
+        },
+        "abusive": {
+          "p": 0.8085642317380353,
+          "r": 0.921090387374462,
+          "f1": 0.8611670020120724
+        },
+        "scam": {
+          "p": 0.8545454545454545,
+          "r": 0.9690721649484536,
+          "f1": 0.9082125603864735
+        }
+      },
+      "confusion_matrix": [
+        [
+          3439,
+          152,
+          16
+        ],
+        [
+          55,
+          642,
+          0
+        ],
+        [
+          3,
+          0,
+          94
+        ]
+      ],
+      "roc_auc_ovr": 0.9891906621454365,
+      "train_rows": 20539,
+      "val_rows": 4401,
+      "C": 2.0,
+      "evaluation_split": "validation"
+    },
+    {
+      "name": "with_stopwords_removed",
+      "macro_f1": 0.9248506724040141,
+      "accuracy": 0.9550102249488752,
+      "latency_ms": 0.2967278345831782,
+      "per_class": {
+        "normal": {
+          "p": 0.980276134122288,
+          "r": 0.9645134460770723,
+          "f1": 0.9723309111235326
+        },
+        "abusive": {
+          "p": 0.8415446071904128,
+          "r": 0.9067431850789096,
+          "f1": 0.8729281767955801
+        },
+        "scam": {
+          "p": 0.9108910891089109,
+          "r": 0.9484536082474226,
+          "f1": 0.9292929292929293
+        }
+      },
+      "confusion_matrix": [
+        [
+          3479,
+          119,
+          9
+        ],
+        [
+          65,
+          632,
+          0
+        ],
+        [
+          5,
+          0,
+          92
+        ]
+      ],
+      "roc_auc_ovr": 0.9898960737993732,
+      "train_rows": 20539,
+      "val_rows": 4401,
+      "C": 2.0,
+      "evaluation_split": "validation"
+    },
+    {
+      "name": "without_sms",
+      "macro_f1": 0.625880878067654,
+      "accuracy": 0.9372869802317655,
+      "latency_ms": 0.29171308793341905,
+      "per_class": {
+        "normal": {
+          "p": 0.9566767205922676,
+          "r": 0.9672858331023011,
+          "f1": 0.9619520264681555
+        },
+        "abusive": {
+          "p": 0.844207723035952,
+          "r": 0.9096126255380201,
+          "f1": 0.8756906077348067
+        },
+        "scam": {
+          "p": 0.6666666666666666,
+          "r": 0.020618556701030927,
+          "f1": 0.04
+        }
+      },
+      "confusion_matrix": [
+        [
+          3489,
+          117,
+          1
+        ],
+        [
+          63,
+          634,
+          0
+        ],
+        [
+          95,
+          0,
+          2
+        ]
+      ],
+      "roc_auc_ovr": 0.9510619118425132,
+      "train_rows": 16938,
+      "val_rows": 4401,
+      "C": 2.0,
+      "evaluation_split": "validation"
+    },
+    {
+      "name": "raw_both",
+      "macro_f1": 0.9282044725861569,
+      "accuracy": 0.955237446034992,
+      "latency_ms": 0.2256119291080021,
+      "per_class": {
+        "normal": {
+          "p": 0.9827293318233296,
+          "r": 0.9622955364568894,
+          "f1": 0.9724050987533268
+        },
+        "abusive": {
+          "p": 0.8316062176165803,
+          "r": 0.921090387374462,
+          "f1": 0.8740639891082369
+        },
+        "scam": {
+          "p": 0.9381443298969072,
+          "r": 0.9381443298969072,
+          "f1": 0.9381443298969072
+        }
+      },
+      "confusion_matrix": [
+        [
+          3471,
+          130,
+          6
+        ],
+        [
+          55,
+          642,
+          0
+        ],
+        [
+          6,
+          0,
+          91
+        ]
+      ],
+      "roc_auc_ovr": 0.991861623743748,
+      "train_rows": 20539,
+      "val_rows": 4401,
+      "C": 2.0,
+      "evaluation_split": "validation"
+    },
+    {
+      "name": "no_lexical_normalization",
+      "macro_f1": 0.9252107066870199,
+      "accuracy": 0.955237446034992,
+      "latency_ms": 0.30052831174766187,
+      "per_class": {
+        "normal": {
+          "p": 0.9808234630569655,
+          "r": 0.9642362073745495,
+          "f1": 0.9724591080665455
+        },
+        "abusive": {
+          "p": 0.8408488063660478,
+          "r": 0.9096126255380201,
+          "f1": 0.8738800827015851
+        },
+        "scam": {
+          "p": 0.9108910891089109,
+          "r": 0.9484536082474226,
+          "f1": 0.9292929292929293
+        }
+      },
+      "confusion_matrix": [
+        [
+          3478,
+          120,
+          9
+        ],
+        [
+          63,
+          634,
+          0
+        ],
+        [
+          5,
+          0,
+          92
+        ]
+      ],
+      "roc_auc_ovr": 0.990244810115196,
+      "train_rows": 20539,
+      "val_rows": 4401,
+      "C": 2.0,
+      "evaluation_split": "validation"
+    }
+  ]
+}

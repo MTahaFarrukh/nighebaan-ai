@@ -7,3 +7,5 @@ This folder will hold the WhatsApp bot that:
 3. Alerts the user and a designated guardian when risk is medium/high
 
 **Status:** not implemented yet. Scaffold only.
+
+
