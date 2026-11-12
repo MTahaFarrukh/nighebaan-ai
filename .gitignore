@@ -45,3 +45,14 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# Private datasets and WhatsApp sessions
+backend/data/processed/*
+!backend/data/processed/.gitkeep
+whatsapp/auth*/
+
+backend/models/**/*.joblib
+
+backend/data/runtime/
+
+backend/models/media/

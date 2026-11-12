@@ -1,0 +1,11 @@
+run_id,timestamp,model,variant,params,val_macro_f1,evaluation_split
+ablations_preliminary_001,2026-11-10T10:57:20.743013+00:00,lr,normalized_both,"{""C"": 2.0, ""class_weight"": ""balanced""}",0.9262617713260317,validation
+ablations_preliminary_001,2026-11-10T10:57:20.743013+00:00,lr,word_only,"{""C"": 2.0, ""class_weight"": ""balanced""}",0.8999810818387649,validation
+ablations_preliminary_001,2026-11-10T10:57:20.743013+00:00,lr,char_only,"{""C"": 2.0, ""class_weight"": ""balanced""}",0.9125221664451609,validation
+ablations_preliminary_001,2026-11-10T10:57:20.743013+00:00,lr,with_stopwords_removed,"{""C"": 2.0, ""class_weight"": ""balanced""}",0.9248506724040141,validation
+ablations_preliminary_001,2026-11-10T10:57:20.743013+00:00,lr,without_sms,"{""C"": 2.0, ""class_weight"": ""balanced""}",0.625880878067654,validation
+ablations_preliminary_001,2026-11-10T10:57:20.743013+00:00,lr,raw_both,"{""C"": 2.0, ""class_weight"": ""balanced""}",0.9282044725861569,validation
+ablations_preliminary_001,2026-11-10T10:57:20.743013+00:00,lr,no_lexical_normalization,"{""C"": 2.0, ""class_weight"": ""balanced""}",0.9252107066870199,validation
+url_preliminary_001,2026-11-10T11:25:57.637307+00:00,url_lr,url_lr,fixed static URL candidates; ml/train_url.py,0.9957241278279557,validation
+url_preliminary_001,2026-11-10T11:25:57.637307+00:00,url_rf,url_rf,fixed static URL candidates; ml/train_url.py,0.9960455286587417,validation
+url_preliminary_001,2026-11-10T11:25:57.637307+00:00,url_gb,url_gb,fixed static URL candidates; ml/train_url.py,0.9963652150595084,validation

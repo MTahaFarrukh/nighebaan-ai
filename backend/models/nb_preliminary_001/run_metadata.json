@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-11-09T15:43:18.119318+00:00",
+  "python": "3.11.15",
+  "sklearn": "1.9.1",
+  "pandas": "3.1.1",
+  "evaluation_split": "validation",
+  "test_accessed": false,
+  "data_review_status": "preliminary_human_unverified",
+  "input_sha256": {
+    "train": "0d3d70326fb1f747af769a280d3182e86948d9a96e006022f3ce07f22c57f150",
+    "val": "abda81a46745bdebbb15d824bf3f29cbc19c0c7aa7a2e81ffb4f95ddb73e0c62"
+  },
+  "parameters": {
+    "alpha": 1.0,
+    "word_ngrams": [
+      1,
+      2
+    ],
+    "char_ngrams": [
+      2,
+      5
+    ]
+  },
+  "source_sha256": {
+    "trainer": "acbc339f24aaf9ff59e4302e5b81157edbacc10fb622dca5e386334296213ac7",
+    "preprocess": "2019d30a5e025a732459c96611a84d447753e5f2ecf36b21fab4d93170246f87",
+    "transformer": "68d938417b1789f6a0f1765db2e2fe78087618f9ee1ac9640f376f863317c411"
+  },
+  "input_hash_format": "canonical dataframe CSV encoded UTF-8; in memory only"
+}

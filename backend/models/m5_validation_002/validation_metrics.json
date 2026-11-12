@@ -1,0 +1,269 @@
+{
+  "evaluation_split": "validation",
+  "status": "preliminary_human_unverified",
+  "test_evaluated": false,
+  "rows": [
+    {
+      "name": "ml_only",
+      "macro_f1": 0.9366841963322545,
+      "per_class": {
+        "normal": {
+          "p": 0.9769636414099362,
+          "r": 0.9758802328805101,
+          "f1": 0.9764216366158114
+        },
+        "abusive": {
+          "p": 0.8819345661450925,
+          "r": 0.8895265423242468,
+          "f1": 0.8857142857142857
+        },
+        "scam": {
+          "p": 0.9578947368421052,
+          "r": 0.9381443298969072,
+          "f1": 0.9479166666666666
+        }
+      },
+      "confusion_matrix": [
+        [
+          3520,
+          83,
+          4
+        ],
+        [
+          77,
+          620,
+          0
+        ],
+        [
+          6,
+          0,
+          91
+        ]
+      ]
+    },
+    {
+      "name": "rules_only",
+      "macro_f1": 0.4289606362920065,
+      "per_class": {
+        "normal": {
+          "p": 0.8417736289381563,
+          "r": 1.0,
+          "f1": 0.91409021794222
+        },
+        "abusive": {
+          "p": 1.0,
+          "r": 0.15925394548063126,
+          "f1": 0.2747524752475248
+        },
+        "scam": {
+          "p": 1.0,
+          "r": 0.05154639175257732,
+          "f1": 0.09803921568627451
+        }
+      },
+      "confusion_matrix": [
+        [
+          3607,
+          0,
+          0
+        ],
+        [
+          586,
+          111,
+          0
+        ],
+        [
+          92,
+          0,
+          5
+        ]
+      ]
+    },
+    {
+      "name": "hybrid",
+      "macro_f1": 0.9366841963322545,
+      "per_class": {
+        "normal": {
+          "p": 0.9769636414099362,
+          "r": 0.9758802328805101,
+          "f1": 0.9764216366158114
+        },
+        "abusive": {
+          "p": 0.8819345661450925,
+          "r": 0.8895265423242468,
+          "f1": 0.8857142857142857
+        },
+        "scam": {
+          "p": 0.9578947368421052,
+          "r": 0.9381443298969072,
+          "f1": 0.9479166666666666
+        }
+      },
+      "confusion_matrix": [
+        [
+          3520,
+          83,
+          4
+        ],
+        [
+          77,
+          620,
+          0
+        ],
+        [
+          6,
+          0,
+          91
+        ]
+      ]
+    }
+  ],
+  "validation_rows": 4401,
+  "risk_sweep": [
+    {
+      "ml_weight": 0.5,
+      "rule_weight": 0.5,
+      "threshold": 0.35,
+      "harmful_f1": 0.8795180722891566,
+      "harmful_precision": 0.9385714285714286,
+      "harmful_recall": 0.827455919395466
+    },
+    {
+      "ml_weight": 0.5,
+      "rule_weight": 0.5,
+      "threshold": 0.5,
+      "harmful_f1": 0.3416666666666667,
+      "harmful_precision": 0.9879518072289156,
+      "harmful_recall": 0.20654911838790932
+    },
+    {
+      "ml_weight": 0.5,
+      "rule_weight": 0.5,
+      "threshold": 0.6,
+      "harmful_f1": 0.24141749723145073,
+      "harmful_precision": 1.0,
+      "harmful_recall": 0.13727959697732997
+    },
+    {
+      "ml_weight": 0.5,
+      "rule_weight": 0.5,
+      "threshold": 0.7,
+      "harmful_f1": 0.010025062656641603,
+      "harmful_precision": 1.0,
+      "harmful_recall": 0.005037783375314861
+    },
+    {
+      "ml_weight": 0.5,
+      "rule_weight": 0.5,
+      "threshold": 0.8,
+      "harmful_f1": 0.0,
+      "harmful_precision": 0.0,
+      "harmful_recall": 0.0
+    },
+    {
+      "ml_weight": 0.6,
+      "rule_weight": 0.4,
+      "threshold": 0.35,
+      "harmful_f1": 0.8867438867438867,
+      "harmful_precision": 0.906578947368421,
+      "harmful_recall": 0.8677581863979849
+    },
+    {
+      "ml_weight": 0.6,
+      "rule_weight": 0.4,
+      "threshold": 0.5,
+      "harmful_f1": 0.8525052928722654,
+      "harmful_precision": 0.9695024077046549,
+      "harmful_recall": 0.760705289672544
+    },
+    {
+      "ml_weight": 0.6,
+      "rule_weight": 0.4,
+      "threshold": 0.6,
+      "harmful_f1": 0.3245521601685985,
+      "harmful_precision": 0.9935483870967742,
+      "harmful_recall": 0.19395465994962216
+    },
+    {
+      "ml_weight": 0.6,
+      "rule_weight": 0.4,
+      "threshold": 0.7,
+      "harmful_f1": 0.22767857142857142,
+      "harmful_precision": 1.0,
+      "harmful_recall": 0.12846347607052896
+    },
+    {
+      "ml_weight": 0.6,
+      "rule_weight": 0.4,
+      "threshold": 0.8,
+      "harmful_f1": 0.0,
+      "harmful_precision": 0.0,
+      "harmful_recall": 0.0
+    },
+    {
+      "ml_weight": 0.7,
+      "rule_weight": 0.30000000000000004,
+      "threshold": 0.35,
+      "harmful_f1": 0.8911138923654568,
+      "harmful_precision": 0.8855721393034826,
+      "harmful_recall": 0.8967254408060453
+    },
+    {
+      "ml_weight": 0.7,
+      "rule_weight": 0.30000000000000004,
+      "threshold": 0.5,
+      "harmful_f1": 0.87508440243079,
+      "harmful_precision": 0.9432314410480349,
+      "harmful_recall": 0.8161209068010076
+    },
+    {
+      "ml_weight": 0.7,
+      "rule_weight": 0.30000000000000004,
+      "threshold": 0.6,
+      "harmful_f1": 0.8369098712446352,
+      "harmful_precision": 0.9685430463576159,
+      "harmful_recall": 0.7367758186397985
+    },
+    {
+      "ml_weight": 0.7,
+      "rule_weight": 0.30000000000000004,
+      "threshold": 0.7,
+      "harmful_f1": 0.30851063829787234,
+      "harmful_precision": 0.9931506849315068,
+      "harmful_recall": 0.18261964735516373
+    },
+    {
+      "ml_weight": 0.7,
+      "rule_weight": 0.30000000000000004,
+      "threshold": 0.8,
+      "harmful_f1": 0.010025062656641603,
+      "harmful_precision": 1.0,
+      "harmful_recall": 0.005037783375314861
+    }
+  ],
+  "recommended_candidate_by_harmful_f1": {
+    "ml_weight": 0.7,
+    "rule_weight": 0.30000000000000004,
+    "threshold": 0.35,
+    "harmful_f1": 0.8911138923654568,
+    "harmful_precision": 0.8855721393034826,
+    "harmful_recall": 0.8967254408060453
+  },
+  "deployed_policy": {
+    "ml_weight": 0.6,
+    "rule_weight": 0.4,
+    "medium_threshold": 0.35,
+    "high_threshold": 0.7,
+    "credential_url_floor": 0.85
+  },
+  "policy_note": "Spec defaults retained; binary harmful-F1 optimum is diagnostic, not automatic guardian-alert calibration.",
+  "rule_only_policy": "abuse >= .30 and abuse > scam -> abusive; otherwise scam >= .35 -> scam; else normal",
+  "aggregate_hybrid_error_categories": {
+    "ml_error_no_rule_correction": 170
+  },
+  "source_fingerprints": {
+    "rules": "c2ba83b8eb915b5eeb4290d54f2e2880de99f48dc91425bf17e867f133578411",
+    "risk": "4348c87176768703d77aa285497e860c68c195cf96191fcef15a445846d2265b"
+  },
+  "url_model_used": false
+}

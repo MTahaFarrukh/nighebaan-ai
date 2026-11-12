@@ -1,0 +1,71 @@
+{
+  "synthetic_only": true,
+  "real_world_accuracy_measured": false,
+  "test_dataset_evaluated": false,
+  "cases": [
+    {
+      "case": "pdf",
+      "status": 200,
+      "expected_status": 200,
+      "passed": true,
+      "preview_characters": 71,
+      "risk_level": "high",
+      "rule_ids": [
+        "R01",
+        "R03",
+        "R05"
+      ],
+      "warning_count": 0
+    },
+    {
+      "case": "image",
+      "status": 200,
+      "expected_status": 200,
+      "passed": true,
+      "preview_characters": 49,
+      "risk_level": "medium",
+      "rule_ids": [
+        "R03",
+        "R05"
+      ],
+      "warning_count": 1
+    },
+    {
+      "case": "audio",
+      "status": 200,
+      "expected_status": 200,
+      "passed": true,
+      "preview_characters": 76,
+      "risk_level": "high",
+      "rule_ids": [
+        "R04",
+        "R05"
+      ],
+      "warning_count": 1
+    },
+    {
+      "case": "video",
+      "status": 200,
+      "expected_status": 200,
+      "passed": true,
+      "preview_characters": 125,
+      "risk_level": "high",
+      "rule_ids": [
+        "R03",
+        "R04",
+        "R05"
+      ],
+      "warning_count": 3
+    },
+    {
+      "case": "tone_negative",
+      "status": 422,
+      "expected_status": 422,
+      "passed": true,
+      "preview_characters": 0,
+      "risk_level": null,
+      "rule_ids": [],
+      "warning_count": 0
+    }
+  ]
+}
