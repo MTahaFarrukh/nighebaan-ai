@@ -1,55 +1,108 @@
-"""Extract lightweight URL features for phishing heuristics."""
+"""Static URL features; no DNS, HTTP or content lookup is performed."""
 
 from __future__ import annotations
 
-from urllib.parse import urlparse
+import ipaddress
+import math
+from collections import Counter
+from urllib.parse import parse_qsl, urlsplit, urlunsplit
 
-SHORTENER_DOMAINS = {
-    "bit.ly",
-    "tinyurl.com",
-    "t.co",
-    "goo.gl",
-    "ow.ly",
-    "is.gd",
-    "buff.ly",
-    "cutt.ly",
-}
+SHORTENER_DOMAINS = frozenset(
+    {"bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly", "is.gd", "buff.ly", "cutt.ly"}
+)
+SUSPICIOUS_TLDS = frozenset({"xyz", "top", "tk"})
+KEYWORDS = ("login", "verify", "secure", "bank", "update", "prize")
+FEATURE_NAMES = (
+    "length",
+    "host_length",
+    "dots_count",
+    "subdomain_count",
+    "digits_count",
+    "hyphens_count",
+    "has_at",
+    "ip_as_host",
+    "https",
+    "is_shortener",
+    "suspicious_tld",
+    "keyword_hits",
+    "path_length",
+    "query_params",
+    "entropy",
+    "special_chars_count",
+)
+
+
+def canonical_url(url: str) -> str:
+    """Normalize scheme/host while preserving case-sensitive paths and queries."""
+    raw = url.strip()
+    if (
+        not raw
+        or len(raw) > 8192
+        or any(c.isspace() or ord(c) < 32 for c in raw)
+        or "\\" in raw
+    ):
+        raise ValueError("Invalid HTTP URL.")
+    if raw.startswith("//"):
+        raw = "http:" + raw
+    elif "://" not in raw:
+        raw = "http://" + raw
+    try:
+        parsed = urlsplit(raw)
+        host = parsed.hostname
+        port = parsed.port
+        if parsed.scheme.lower() not in {"http", "https"} or not host:
+            raise ValueError
+        host = host.rstrip(".").encode("idna").decode("ascii").lower()
+        if not host or any(c in host for c in "/?#@%"):
+            raise ValueError
+        if ":" in host:
+            ipaddress.IPv6Address(host)
+            host = "[" + host + "]"
+        credentials = (
+            parsed.netloc.rsplit("@", 1)[0] + "@" if "@" in parsed.netloc else ""
+        )
+        netloc = credentials + host
+        if port is not None and (parsed.scheme.lower(), port) not in {
+            ("http", 80),
+            ("https", 443),
+        }:
+            netloc += ":" + str(port)
+        return urlunsplit(
+            (parsed.scheme.lower(), netloc, parsed.path or "/", parsed.query, "")
+        )
+    except (ValueError, UnicodeError):
+        raise ValueError("Invalid HTTP URL.") from None
 
 
 def extract_url_features(url: str) -> dict[str, float | int | bool | str]:
-    """Compute simple structural features from a URL string."""
-    raw = url.strip()
-    if not re_has_scheme(raw):
-        raw = "http://" + raw
-
-    parsed = urlparse(raw)
-    host = parsed.netloc.lower() or parsed.path.split("/")[0].lower()
-    path = parsed.path or ""
-    full = raw.lower()
-
-    # Subdomains: exclude bare "example.com" and "www.example.com" edge cases
+    """Return numeric lexical cues only, never echo the URL or credentials."""
+    raw = canonical_url(url)
+    parsed = urlsplit(raw)
+    host = parsed.hostname or ""
+    try:
+        ipaddress.ip_address(host)
+        is_ip = True
+    except ValueError:
+        is_ip = False
     host_no_www = host.removeprefix("www.")
-    parts = [p for p in host_no_www.split(".") if p]
-    subdomain_count = max(0, len(parts) - 2)  # e.g. a.b.example.com -> 2
-
-    digits = sum(c.isdigit() for c in full)
-    special_chars = sum(1 for c in full if not c.isalnum() and c not in ("/", ":", ".", "-", "_"))
-
-    is_https = parsed.scheme == "https"
-    is_shortener = any(host_no_www == d or host_no_www.endswith("." + d) for d in SHORTENER_DOMAINS)
-
+    counts = Counter(raw)
     return {
-        "url": url,
-        "length": len(url),
-        "digits_count": digits,
-        "special_chars_count": special_chars,
-        "subdomain_count": subdomain_count,
-        "https": is_https,
-        "is_shortener": is_shortener,
-        "host": host_no_www,
+        "length": len(raw),
+        "host_length": len(host),
+        "dots_count": raw.count("."),
+        "subdomain_count": 0 if is_ip else max(0, len(host_no_www.split(".")) - 2),
+        "digits_count": sum(c.isdigit() for c in raw),
+        "hyphens_count": raw.count("-"),
+        "has_at": "@" in parsed.netloc,
+        "ip_as_host": is_ip,
+        "https": parsed.scheme == "https",
+        "is_shortener": host_no_www in SHORTENER_DOMAINS,
+        "suspicious_tld": host.rsplit(".", 1)[-1] in SUSPICIOUS_TLDS,
+        "keyword_hits": sum(word in raw.lower() for word in KEYWORDS),
+        "path_length": len(parsed.path),
+        "query_params": len(parse_qsl(parsed.query, keep_blank_values=True)),
+        "entropy": -sum(
+            (n / len(raw)) * math.log2(n / len(raw)) for n in counts.values()
+        ),
+        "special_chars_count": sum(not c.isalnum() and c not in "/:.-_" for c in raw),
     }
-
-
-def re_has_scheme(url: str) -> bool:
-    """Return True if the URL already includes a scheme."""
-    return "://" in url

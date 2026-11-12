@@ -240,7 +240,7 @@ Each rule: `id, description, patterns (regex/keywords, Roman Urdu + English + Ur
 ### 9.2 Risk engine (`services/risk_engine.py`)
 ```
 p_ml    = 1 - P(normal)                       # from the ML classifier
-r_rules = rule_score
+r_rules = max(scam_rule_score, abuse_rule_score)
 r_url   = max P(phishing) over extracted URLs  # omitted if no URL
 
 with URL:    risk = 0.50*p_ml + 0.30*r_rules + 0.20*r_url
@@ -249,9 +249,10 @@ without URL: risk = 0.60*p_ml + 0.40*r_rules
 overrides:   R05 (credential request) AND has-URL  -> risk = max(risk, 0.85)
 levels:      low < 0.35 <= medium < 0.70 <= high
 ```
-All weights and thresholds live in `config.py` / `.env` and are **tuned on the validation set** (report the chosen values). Final `label` = argmax of ML probs unless rules push risk to high with scam flags, in which case label = `scam` (document this rule).
+All weights and thresholds live in `config.py` / `.env` and are **tuned on the validation set** (report the chosen values). Final `label` = argmax of ML probs unless rules push risk to high with a positive scam axis at least as strong as the abuse axis, in which case label = `scam` (document this rule).
 
 ### 9.3 Explanation
+Implemented: positive word TF-IDF times LR coefficient contributions for the predicted ML class, with VotingClassifier label decoding and lexicon masking. These are explicitly partial LR-component cues, not a full ensemble attribution. Character/SVM effects are not attributed.
 Template-based and deterministic: list fired rules in plain language, top contributing n-grams (from LR coefficients or NB log-probs), and URL findings. Example:
 > "High risk (0.87): asks for OTP, contains a shortened link, uses urgency words. Model also leans 'scam' (0.82)."
 
@@ -461,3 +462,77 @@ MAX_VIDEO_SECONDS=60
 2. Submission deadline and demo format (live vs video)?
 3. Who owns Track A and who owns Track B?
 4. Which number will be the dedicated WhatsApp demo account?
+
+### Validation-only baseline artifacts
+The M3 trainer writes run-local metrics.json with the section 8.5 model fields,
+plus evaluation_split="validation". dataset.test is null when unknown because
+the trainer never opens test.csv; class_counts describes the training split.
+No test metric is implied. Each fresh run directory includes experiments.csv,
+label_map.json (display labels and sklearn probability order), run_metadata.json
+(input/source SHA256 and software versions), validation_metrics.json and the
+complete nb_baseline.joblib pipeline. These are not automatically promoted to
+models/text_clf.joblib or served by the API. Review status is explicitly unverified.
+
+### Trained text model integration
+`/api/analyze/text` now uses the local promoted preliminary LR/SVM ensemble.
+Its response schema is unchanged. The explanation identifies its human-unverified
+status. Raw input passes through the frozen training-input sanitizer and saved
+pipeline; rule processing retains the existing cleaned-text/URL path.
+Missing, invalid or fingerprint-mismatched model artifacts return HTTP 503 with
+`detail: Text model unavailable. Please try again later.` Input reduced to empty
+text returns HTTP 422. No heuristic text fallback is silently substituted.
+`/api/analyze/url` remains an untrained heuristic until M6; its explanation states this.
+`backend/models/text_clf.manifest.json` records artifact fingerprint/provenance.
+Only trusted local artifacts are supported; fingerprints detect accidental changes,
+not malicious replacement of both model and manifest. Restart API to load a newly
+promoted artifact, since successful model loads are cached.
+
+### M5 implementation clarification
+Separate axes prevent abuse-driven high risk with incidental scam cues from overriding the abuse label. See docs/RULES_RISK.md for the measured validation fix cycle. Before M6 supplies a trained URL probability, use no-URL fusion and disclose this fallback. Threshold sweep is diagnostic; defaults remain deployed, alert-severity calibration and n-gram attribution are pending. API rule_flags contain R01-R11 IDs; flagged_words contains only masked abuse matches. No response schema fields changed.
+
+### M6 URL implementation / contract clarification
+UCI PhiUSIIL is the selected public URL source within section 6.2's UCI URL category.
+See docs/URL_MODEL.md and URL_DATASET_INVENTORY.json for provenance, pinned bytes, label inversion,
+canonical deduplication, fixed stratified splits, validation metrics and source limitations.
+Only raw URL/label columns are read in memory. No webpage-derived columns or network lookups are used.
+The saved sklearn pipeline contains stateless numeric URL extraction plus the selected classifier.
+Text with URLs uses max P(phishing) in the existing 0.50/0.30/0.20 fusion. A missing/corrupt URL model
+leaves text analysis available with an explicit no-URL-model fallback explanation.
+Standalone URL analysis has no independent text model evidence: risk_score=P(phishing),
+probabilities={normal:1-P(phishing), abusive:0, scam:P(phishing)}; existing risk thresholds apply.
+This avoids double-counting the same URL evidence. Its label is the probability argmax.
+Invalid HTTP(S) URL -> 422; missing/corrupt model -> 503. No heuristic probabilities are substituted.
+url_features now returns only numeric/boolean lexical cues; raw URL/host/credentials are not echoed.
+Response schema fields and TypeScript types are unchanged. metrics.json adds url_models (binary
+benign/phishing class order) and best_url_model, separate from the three-class text models.
+Historical M5 validation did not use the URL model; do not describe that score as M6 full-text validation.
+
+### M8 web interface and public contracts (2026-11-11)
+Five hash-routed pages: Analyze, Dashboard, Model Lab, Settings, About/Ethics.
+GET /api/metrics/models returns the allowlisted aggregate ModelMetrics schema; text and URL
+class sets remain separate. Missing/malformed report returns 503. Unknown metadata is not exposed.
+GET /api/alerts?limit=20&offset=0 returns AlertHistory: items, total, limit, offset,
+by_modality and by_day (UTC date keys). Limit 1..100; offset >=0; invalid values return 422.
+Rows contain only id, ts, modality, label, risk_level, risk_score, rule_ids. Only high-risk web
+analyses are retained in ignored backend/data/runtime/alerts.sqlite3. This is local result
+history, not delivered alerts. Low/medium results are not saved, so counts are not overall
+analysis volume or accuracy. No text, URLs, phone numbers or sender identifiers are accepted
+by the persistence service. Analysis succeeds with an explanation if history writing fails.
+GET /api/settings returns display-only medium/high thresholds, credential_url_floor,
+dry_run, whatsapp_available=false and consent_available=false. No secrets or contacts.
+Guardian setup/consent/simulation stays unavailable until M9; file analysis stays unavailable
+until M7. Settings intentionally does not collect a phone number or fake an enabled connection.
+Public schemas live in app/dashboard_schemas.py; frontend types generated from FastAPI OpenAPI
+with npm run gen:types. API requests centralized in src/api.ts; TanStack Query caches only
+read-only metadata. Analysis inputs/results use local component state and are never put in
+query keys, localStorage or sessionStorage. Charts use Recharts and generated measured data.
+
+### M7 implementation contract (2026-11-11)
+POST /api/analyze/file accepts multipart UploadFile `file`, verifies magic bytes/MIME,
+and returns FileAnalyzeResponse: all AnalyzeResponse fields plus modality (image/pdf/audio/video),
+extracted_text (masked 5,000-character preview), optional extraction_confidence, warnings.
+Response content is in memory only. No transcripts or filenames enter history or logs.
+Public settings add max_upload_mb, max_pdf_pages and max_media_seconds. File UI reads these values.
+30,000-character extraction limit rejects larger content rather than silently analyzing a prefix.
+Errors: 413 limits, 415 unsupported/mismatch, 422 unreadable/no text, 429 media busy, 503 missing model.
+See docs/MEDIA.md for processing, limits, setup, privacy and measured extraction limitations.

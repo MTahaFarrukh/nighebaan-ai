@@ -1,0 +1,328 @@
+{
+  "classifier": "rf",
+  "phishing_weight": 1.0,
+  "www_invariance": true,
+  "evaluation_split": "validation",
+  "test_evaluated": false,
+  "source": "https://archive.ics.uci.edu/static/public/967/phiusiil%2Bphishing%2Burl%2Bdataset.zip",
+  "archive_sha256": "0a639fd03aea6308c5b1c10c92aa23c2ce1505447a9137271865cd0badc9a59a",
+  "frozen_splits": {
+    "train": {
+      "rows": 164280,
+      "class_counts": {
+        "0": 94394,
+        "1": 69886
+      },
+      "membership_sha256": "e42d62c722ef31eb3cc898fca8f29bc9efb2695f597ea633839910a6f2f24a18"
+    },
+    "val": {
+      "rows": 35203,
+      "class_counts": {
+        "0": 20227,
+        "1": 14976
+      },
+      "membership_sha256": "85d27337c2deed0f3d54fec4c9a2675f98bed295a2ac9d72eb71bf4e92de7773"
+    },
+    "test": {
+      "rows": 35204,
+      "class_counts": {
+        "0": 20228,
+        "1": 14976
+      },
+      "membership_sha256": "cc5339163daa3f0347bdb5bfbfc28f03a0c9bf8e6d744246d199cef598410df0"
+    }
+  },
+  "training_rows_after_augmentation": 447462,
+  "original_train_rows": 164280,
+  "training_shape_audit": {
+    "0": {
+      "rows": 94394,
+      "non_root_path_fraction": 0.0,
+      "www_fraction": 1.0,
+      "https_fraction": 1.0
+    },
+    "1": {
+      "rows": 69886,
+      "non_root_path_fraction": 0.27144206278796895,
+      "www_fraction": 0.4172509515496666,
+      "https_fraction": 0.48408837249234465
+    }
+  },
+  "stress_training_overlap": 0,
+  "rows": [
+    {
+      "name": "deployed_before",
+      "synthetic_no_www_root": {
+        "macro_f1": 0.2970474461649859,
+        "per_class": {
+          "benign": {
+            "p": 0.02608695652173913,
+            "r": 0.0001483166065160429,
+            "f1": 0.00029495624815652346
+          },
+          "phishing": {
+            "p": 0.4236206110351117,
+            "r": 0.9925213675213675,
+            "f1": 0.5937999360818152
+          }
+        },
+        "confusion_matrix": [
+          [
+            3,
+            20224
+          ],
+          [
+            112,
+            14864
+          ]
+        ],
+        "benign_false_positive_rate": 0.999851683393484,
+        "excluded_training_overlap": 0
+      },
+      "synthetic_no_www_path": {
+        "macro_f1": 0.2968821778816386,
+        "per_class": {
+          "benign": {
+            "p": 0.0,
+            "r": 0.0,
+            "f1": 0.0
+          },
+          "phishing": {
+            "p": 0.42358439485908067,
+            "r": 0.9925213675213675,
+            "f1": 0.5937643557632772
+          }
+        },
+        "confusion_matrix": [
+          [
+            0,
+            20227
+          ],
+          [
+            112,
+            14864
+          ]
+        ],
+        "benign_false_positive_rate": 1.0,
+        "excluded_training_overlap": 0
+      },
+      "original_validation": {
+        "macro_f1": 0.9963652150595084,
+        "per_class": {
+          "benign": {
+            "p": 0.9944898159992128,
+            "r": 0.9993572947050972,
+            "f1": 0.9969176139866348
+          },
+          "phishing": {
+            "p": 0.9991261679101969,
+            "r": 0.9925213675213675,
+            "f1": 0.995812816132382
+          }
+        },
+        "confusion_matrix": [
+          [
+            20214,
+            13
+          ],
+          [
+            112,
+            14864
+          ]
+        ],
+        "benign_false_positive_rate": 0.0006427052949028526
+      },
+      "synthetic_path_stress": {
+        "macro_f1": 0.2968821778816386,
+        "per_class": {
+          "benign": {
+            "p": 0.0,
+            "r": 0.0,
+            "f1": 0.0
+          },
+          "phishing": {
+            "p": 0.42358439485908067,
+            "r": 0.9925213675213675,
+            "f1": 0.5937643557632772
+          }
+        },
+        "confusion_matrix": [
+          [
+            0,
+            20227
+          ],
+          [
+            112,
+            14864
+          ]
+        ],
+        "benign_false_positive_rate": 1.0
+      },
+      "unseen_hostname_validation": {
+        "macro_f1": 0.9975016674940342,
+        "per_class": {
+          "benign": {
+            "p": 0.9968435588873545,
+            "r": 0.9993572311495673,
+            "f1": 0.9980988123750031
+          },
+          "phishing": {
+            "p": 0.9989526264904931,
+            "r": 0.99486479980743,
+            "f1": 0.9969045226130653
+          }
+        },
+        "confusion_matrix": [
+          [
+            20212,
+            13
+          ],
+          [
+            64,
+            12399
+          ]
+        ],
+        "benign_false_positive_rate": 0.0006427688504326329
+      }
+    },
+    {
+      "name": "url_robust_rf",
+      "synthetic_no_www_root": {
+        "macro_f1": 0.9532693104149645,
+        "per_class": {
+          "benign": {
+            "p": 0.9611155141668318,
+            "r": 0.9592623720769269,
+            "f1": 0.960188048991711
+          },
+          "phishing": {
+            "p": 0.9451215451215451,
+            "r": 0.9475827991452992,
+            "f1": 0.9463505718382181
+          }
+        },
+        "confusion_matrix": [
+          [
+            19403,
+            824
+          ],
+          [
+            785,
+            14191
+          ]
+        ],
+        "benign_false_positive_rate": 0.04073762792307312,
+        "excluded_training_overlap": 0
+      },
+      "synthetic_no_www_path": {
+        "macro_f1": 0.8992902097357831,
+        "per_class": {
+          "benign": {
+            "p": 0.9570639391784718,
+            "r": 0.8650813269392397,
+            "f1": 0.9087509737730459
+          },
+          "phishing": {
+            "p": 0.8387115839243499,
+            "r": 0.9475827991452992,
+            "f1": 0.8898294456985202
+          }
+        },
+        "confusion_matrix": [
+          [
+            17498,
+            2729
+          ],
+          [
+            785,
+            14191
+          ]
+        ],
+        "benign_false_positive_rate": 0.13491867306076036,
+        "excluded_training_overlap": 0
+      },
+      "original_validation": {
+        "macro_f1": 0.9757772522827306,
+        "per_class": {
+          "benign": {
+            "p": 0.9625637846344604,
+            "r": 0.9978741286399367,
+            "f1": 0.9799009612583746
+          },
+          "phishing": {
+            "p": 0.9969790642124491,
+            "r": 0.9475827991452992,
+            "f1": 0.9716535433070866
+          }
+        },
+        "confusion_matrix": [
+          [
+            20184,
+            43
+          ],
+          [
+            785,
+            14191
+          ]
+        ],
+        "benign_false_positive_rate": 0.002125871360063282
+      },
+      "synthetic_path_stress": {
+        "macro_f1": 0.9227170670761851,
+        "per_class": {
+          "benign": {
+            "p": 0.9589306267657215,
+            "r": 0.9061650269441835,
+            "f1": 0.931801428535116
+          },
+          "phishing": {
+            "p": 0.882031201441979,
+            "r": 0.9475827991452992,
+            "f1": 0.9136327056172542
+          }
+        },
+        "confusion_matrix": [
+          [
+            18329,
+            1898
+          ],
+          [
+            785,
+            14191
+          ]
+        ],
+        "benign_false_positive_rate": 0.09383497305581648
+      },
+      "unseen_hostname_validation": {
+        "macro_f1": 0.978404679879705,
+        "per_class": {
+          "benign": {
+            "p": 0.9703351122650128,
+            "r": 0.9978739184177997,
+            "f1": 0.9839118564742589
+          },
+          "phishing": {
+            "p": 0.9963832113718564,
+            "r": 0.9504934606435048,
+            "f1": 0.9728975032851511
+          }
+        },
+        "confusion_matrix": [
+          [
+            20182,
+            43
+          ],
+          [
+            617,
+            11846
+          ]
+        ],
+        "benign_false_positive_rate": 0.0021260815822002474
+      }
+    }
+  ],
+  "promotion_gate_passed": false,
+  "gate": "Original macro-F1/recall drop no greater than .02, and lower synthetic benign false-positive rate.",
+  "limits": "Synthetic no-www variants also inherit source labels; www and apex need not serve the same site. Benign path variants inherit source labels as an assumption; this is a synthetic stress test, not external accuracy. Unseen hostname is not registrable-domain separation. Test only used for membership exclusion, never inference.",
+  "source_artifact_sha256": "45bf482a425b274c26957287d4acee10f8b64d0d85a86604de8d0f337c96ba0b"
+}

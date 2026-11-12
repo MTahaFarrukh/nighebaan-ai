@@ -1,0 +1,10 @@
+{
+  "sha256": "45bf482a425b274c26957287d4acee10f8b64d0d85a86604de8d0f337c96ba0b",
+  "best_model": "url_gb",
+  "classes": [
+    0,
+    1
+  ],
+  "evaluation_split": "validation",
+  "feature_code_sha256": "f136baa9f41c4382cf29f6dad1c5632809861adde0c906cf8834820375d5a0c5"
+}

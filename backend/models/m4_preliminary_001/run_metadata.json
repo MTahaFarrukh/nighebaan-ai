@@ -1,0 +1,47 @@
+{
+  "runner_sha256": "a5ce396b622cf3948803854277b23932421bc56cae8c03f5e6fe577dc761818e",
+  "partitions": {
+    "train": {
+      "rows": 20539,
+      "class_counts": {
+        "normal": 16833,
+        "abusive": 3252,
+        "scam": 454
+      },
+      "membership_sha256": "aac843ab7ac8f14e8b490bdb5a51a24cc57de84610d99dc965784995aa737308"
+    },
+    "val": {
+      "rows": 4401,
+      "class_counts": {
+        "normal": 3607,
+        "abusive": 697,
+        "scam": 97
+      },
+      "membership_sha256": "ee99d8a5a1362f6ef72cea31e5b723bded7f8c7a2841099329017b5d00529741"
+    },
+    "test": {
+      "rows": 4402,
+      "class_counts": {
+        "normal": 3608,
+        "abusive": 697,
+        "scam": 97
+      },
+      "membership_sha256": "1163170be7836682fd3532d14a90a01f3c509ca5aeae1689a4a14ab1d0515ce2"
+    },
+    "custom_holdout": {
+      "rows": 16,
+      "class_counts": {
+        "normal": 6,
+        "abusive": 0,
+        "scam": 10
+      },
+      "membership_sha256": "fb8b1f427813508d240e5bd21f0c3c61659195cd7a5feb972b8599a7ae9299c5"
+    }
+  },
+  "sklearn": "1.9.1",
+  "data_review_status": "preliminary_human_unverified",
+  "test_evaluated": false,
+  "cv": "five shuffled stratified folds, seed 42",
+  "word_max_features": 15000,
+  "char_max_features": 25000
+}

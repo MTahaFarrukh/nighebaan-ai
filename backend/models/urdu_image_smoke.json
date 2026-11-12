@@ -1,0 +1,10 @@
+{
+  "synthetic_only": true,
+  "http_status": 200,
+  "urdu_bridge_used": true,
+  "rule_ids": [
+    "R03",
+    "R05"
+  ],
+  "risk_level": "medium"
+}

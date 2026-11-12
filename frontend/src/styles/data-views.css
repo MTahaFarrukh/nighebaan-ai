@@ -1,0 +1,148 @@
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.settings-list > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.86rem;
+  gap: 16px;
+}
+.settings-list dt {
+  color: var(--muted);
+}
+.settings-list dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.settings-list {
+  margin: 20px 0;
+}
+.steps {
+  padding-left: 22px;
+}
+.steps li {
+  padding: 8px 0 12px 12px;
+  color: var(--accent);
+}
+.steps p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 8px 0 0;
+}
+.steps strong {
+  color: #e9f1f3;
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.stat span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.stat strong {
+  font-size: 2.4rem;
+  font-weight: 600;
+}
+.stat small {
+  font-size: 0.7rem;
+  color: #8ca4b3;
+}
+.chart {
+  height: 255px;
+  margin: 25px 0;
+  min-width: 0;
+}
+.table-wrap {
+  overflow: auto;
+  width: 100%;
+  margin-top: 16px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  text-align: left;
+}
+th {
+  color: #a9c0cd;
+  font-weight: 500;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+td,
+th {
+  padding: 15px 12px;
+  border-bottom: 1px solid #263b48;
+}
+td {
+  font-variant-numeric: tabular-nums;
+}
+td:first-child,
+th:first-child {
+  padding-left: 0;
+}
+td {
+  white-space: nowrap;
+}
+.matrix th,
+.matrix td {
+  padding: 16px !important;
+  text-transform: capitalize;
+}
+.matrix td {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.select-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+}
+.select-label select {
+  width: auto;
+  max-width: 190px;
+  padding: 7px 10px;
+  font-size: 0.8rem;
+}
+.pagination {
+  margin-top: 22px;
+}
+.loading {
+  padding: 65px;
+  text-align: center;
+  color: var(--muted);
+}
+footer {
+  margin-top: 50px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  color: #7f98a8;
+  font-size: 0.7rem;
+}
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 20px;
+  z-index: 10;
+  padding: 12px;
+  background: var(--accent);
+  color: #0c161e;
+}
+.skip-link:focus {
+  top: 10px;
+}

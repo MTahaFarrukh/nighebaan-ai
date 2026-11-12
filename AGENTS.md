@@ -111,3 +111,6 @@ Login/auth systems, payments, storing message content, mobile apps, new datasets
 
 ## Priority order when time is short
 M0-M6 (scaffold → data → preprocessing → models → rules/risk → URL) come **before** multimodal and WhatsApp. The project must be complete and demoable without WhatsApp.
+
+## Continuation state
+Before starting new work, read docs/HANDOFF.md. Update it after each milestone or unfinished work session with actual tests, artifacts, blockers and exact next steps. Do not repeat completed setup or claim pending milestones complete.

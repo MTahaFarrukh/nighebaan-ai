@@ -1,0 +1,7 @@
+[
+  {"input": "yaaaar ye to fraaud hai!!!", "expected": "yaar ye to fraud hai"},
+  {"input": "Achha nhi, kia abhi paise bhjo?", "expected": "acha nahi kya abhi paisay bhejo"},
+  {"input": "PKR 5,000 example.com/demo 03XX-XXXXXXX", "expected": "amounttoken urltoken phonetoken"},
+  {"input": "demo@example.com par reply karo 😃", "expected": "emailtoken par reply karo emojitoken"},
+  {"input": "یہ پیغام ہے، OTP نہیں دینا؟", "expected": "یہ پیغام ہے otp نہیں دینا"}
+]

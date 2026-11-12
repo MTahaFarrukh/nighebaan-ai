@@ -1,0 +1,110 @@
+[
+  {
+    "id": "R01",
+    "description": "Contains a link",
+    "weight": 0.15,
+    "axis": "scam",
+    "patterns": []
+  },
+  {
+    "id": "R02",
+    "description": "Shortened or suspicious URL host",
+    "weight": 0.2,
+    "axis": "scam",
+    "patterns": []
+  },
+  {
+    "id": "R03",
+    "description": "Uses urgency language",
+    "weight": 0.15,
+    "axis": "scam",
+    "patterns": [
+      "\\b(foran|furan|abhi|jaldi|urgent|immediately|turant)\\b",
+      "(?<!\\w)(فوراً|جلدی|ابھی)(?!\\w)"
+    ]
+  },
+  {
+    "id": "R04",
+    "description": "Mentions a prize or lottery",
+    "weight": 0.3,
+    "axis": "scam",
+    "patterns": [
+      "\\b(inaam|lottery|prize|winner|jackpot|jeet gaye|mubarak ho)\\b",
+      "(?<!\\w)(انعام|قرعہ)(?!\\w)"
+    ]
+  },
+  {
+    "id": "R05",
+    "description": "Requests credentials or a verification code",
+    "weight": 0.35,
+    "axis": "scam",
+    "patterns": [
+      "\\b(otp|pin|cnic|password|account number|code)\\b.{0,60}\\b(bhejo|batao|share|send|do|dena|likho|enter|submit)\\b",
+      "\\b(send|share|enter|submit)\\b.{0,60}\\b(otp|pin|cnic|password|code)\\b",
+      "(?<!\\w)(کوڈ|پاس ورڈ|پن)(?!\\w).{0,40}(بھیجو|بتاؤ|دیں)"
+    ],
+    "exclude_patterns": [
+      "\\b(mat|never)\\b",
+      "\\b(do not|don\\x27t|nahi|nahin)\\b.{0,30}\\b(share|send|dena|bhejo)\\b",
+      "\\b(share|send)\\b.{0,15}\\b(nahi|nahin)\\b",
+      "نہ (بھیجو|دیں|بتاؤ)"
+    ]
+  },
+  {
+    "id": "R06",
+    "description": "Requests or mentions a payment transfer",
+    "weight": 0.25,
+    "axis": "scam",
+    "patterns": [
+      "\\b(easypaisa|jazzcash|advance|bank transfer|paisay bhejo)\\b",
+      "(?<!\\w)(پیسے بھیجو|ایزی پیسہ)(?!\\w)"
+    ]
+  },
+  {
+    "id": "R07",
+    "description": "Claims an institutional identity",
+    "weight": 0.2,
+    "axis": "scam",
+    "patterns": [
+      "\\b(bank|bisp|ehsaas|nadra|courier|customer care)\\b",
+      "(?<!\\w)(بینک|نادرا|احساس)(?!\\w)"
+    ]
+  },
+  {
+    "id": "R08",
+    "description": "Threatens account closure or legal action",
+    "weight": 0.2,
+    "axis": "scam",
+    "patterns": [
+      "\\b(account block|band ho jayega|legal action|fir)\\b",
+      "(?<!\\w)(اکاؤنٹ بند|قانونی کارروائی)(?!\\w)"
+    ]
+  },
+  {
+    "id": "R09",
+    "description": "Promises unrealistic earnings or returns",
+    "weight": 0.25,
+    "axis": "scam",
+    "patterns": [
+      "\\b(ghar (baithay|bethay) kama\\w*|guaranteed profit|guaranteed return|daily 5000)\\b",
+      "(?<!\\w)(گھر بیٹھے کمائیں|یقینی منافع)(?!\\w)"
+    ]
+  },
+  {
+    "id": "R10",
+    "description": "Uses number-change or relative-emergency cues",
+    "weight": 0.25,
+    "axis": "scam",
+    "patterns": [
+      "\\b(number change|naya number|urgent paisay chahiye)\\b",
+      "(?<!\\w)(نیا نمبر|نمبر بدل)(?!\\w)"
+    ]
+  },
+  {
+    "id": "R11",
+    "description": "Matches an abusive-language cue",
+    "weight": 0.3,
+    "axis": "abuse",
+    "patterns": []
+  }
+]

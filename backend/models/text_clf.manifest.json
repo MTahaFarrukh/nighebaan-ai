@@ -1,0 +1,11 @@
+{
+  "model": "voting_ensemble",
+  "status": "preliminary_human_unverified",
+  "sha256": "89899292b6fff1d3ccb4883ee6a9ae591866eccd7aa200afce9db51bb2d2fce7",
+  "source_sha256": "ad073397dcf15a96721c645288be3ebbd962a44c1f496e87f6eb7f8f2b8c8580",
+  "probability_order": [
+    "abusive",
+    "normal",
+    "scam"
+  ]
+}

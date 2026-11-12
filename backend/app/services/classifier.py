@@ -1,40 +1,71 @@
-"""Stub ML classifier — returns dummy probabilities until models are trained."""
+"""Lazy loading of a trusted local model; input content is never logged."""
 
 from __future__ import annotations
 
+import hashlib
+import json
+import pickle
+from functools import lru_cache
+from pathlib import Path
+
+import joblib
+import numpy as np
+
 from app.schemas import Label, Probabilities
 
+MODEL_PATH = Path(__file__).resolve().parents[2] / "models/text_clf.joblib"
 
-def classify_text(cleaned_text: str) -> Probabilities:
-    """
-    STUB: Return heuristic dummy probabilities based on simple keyword hints.
 
-    Replace this with a loaded scikit-learn / joblib model once trained.
-    """
-    text = cleaned_text.lower()
+class ModelUnavailableError(RuntimeError):
+    """The local classifier cannot safely supply probabilities."""
 
-    # Lightweight heuristic so the UI shows varied output before real ML lands.
-    scam_hints = ("lottery", "inaam", "otp", "account", "password", "cnic", "prize")
-    abuse_hints = ("kutta", "bewaqoof", "ullu", "gadha", "harami")
 
-    scam_hits = sum(1 for w in scam_hints if w in text)
-    abuse_hits = sum(1 for w in abuse_hints if w in text)
+@lru_cache(maxsize=1)
+def load_model(path: str) -> object:
+    """Load only a locally promoted artifact after fingerprint verification."""
+    artifact = Path(path)
+    try:
+        manifest = json.loads(artifact.with_suffix(".manifest.json").read_text())
+        if hashlib.sha256(artifact.read_bytes()).hexdigest() != manifest["sha256"]:
+            raise ValueError("Artifact fingerprint mismatch.")
+        model = joblib.load(artifact)
+        if set(model.classes_) != {"normal", "abusive", "scam"}:
+            raise ValueError("Invalid classifier labels.")
+        return model
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        AttributeError,
+        EOFError,
+        ImportError,
+        pickle.UnpicklingError,
+    ):
+        raise ModelUnavailableError("Text model unavailable.") from None
 
-    if scam_hits > abuse_hits and scam_hits > 0:
-        return Probabilities(normal=0.15, abusive=0.10, scam=0.75)
-    if abuse_hits > 0:
-        return Probabilities(normal=0.20, abusive=0.70, scam=0.10)
-    if "http" in text or "www." in text:
-        return Probabilities(normal=0.40, abusive=0.10, scam=0.50)
 
-    return Probabilities(normal=0.80, abusive=0.10, scam=0.10)
+def classify_text(text: str) -> Probabilities:
+    """Run the full raw-text pipeline and map probabilities by saved classes_."""
+    model = load_model(str(MODEL_PATH))
+    try:
+        values = np.asarray(model.predict_proba([text]), dtype=float)
+        if values.shape != (1, 3) or not np.isfinite(values).all():
+            raise ValueError("Invalid probabilities.")
+        if (values < 0).any() or (values > 1).any() or not np.isclose(values.sum(), 1):
+            raise ValueError("Invalid probability distribution.")
+        return Probabilities(
+            **dict(zip(model.classes_, values[0].tolist(), strict=True))
+        )
+    except (ValueError, TypeError, AttributeError):
+        raise ModelUnavailableError("Text model unavailable.") from None
 
 
 def predict_label(probabilities: Probabilities) -> Label:
-    """Pick the label with the highest probability."""
+    """Select the highest named probability."""
     scores: dict[Label, float] = {
         "normal": probabilities.normal,
         "abusive": probabilities.abusive,
         "scam": probabilities.scam,
     }
-    return max(scores, key=scores.get)
+    return max(scores, key=lambda label: scores[label])
