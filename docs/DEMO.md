@@ -17,7 +17,7 @@ source shortcuts; synthetic robustness checks are not externally verified URL la
 OCR missed a link in a synthetic fixture. English synthetic speech has been exercised, but
 realistic Roman Urdu speech accuracy remains unevaluated. LR word cues explain only the linear
 component, not the complete ensemble or a causal reason. Thresholds are not guardian-calibrated.
-No human review/kappa was fabricated. Final test/custom hold-out remain untouched.
+Custom labels remain human-unverified. The frozen models were evaluated once on the test and synthetic custom hold-out partitions. See [FINAL_RESULTS.json](FINAL_RESULTS.json) for aggregate scores.
 
 Browser QA passed for the desktop scam result and Dashboard, and mobile Model Lab, Settings and file upload controls. WhatsApp needs a dedicated demo number,
 consent and dry-run verification before any real guardian alerts; do not use a personal number.

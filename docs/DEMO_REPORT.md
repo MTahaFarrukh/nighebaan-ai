@@ -47,6 +47,17 @@ Candidate results do not imply promotion; the active model above comes from depl
 
 Synthetic no-www variants also inherit source labels; www and apex need not serve the same site. Benign path variants inherit source labels as an assumption; this is a synthetic stress test, not external accuracy. Unseen hostname is not registrable-domain separation. Test only used for membership exclusion, never inference.
 
+## One-shot test results
+
+| Evaluation | Macro-F1 | Rows |
+|---|---:|---:|
+| Text ML | 0.9216 | 4402 |
+| Text hybrid | 0.9140 | 4402 |
+| Synthetic custom hybrid | 0.7922 | 16 |
+| Static URL | 0.9960 | 35204 |
+
+Final numbers for frozen artifacts on source-specific proxy labels; synthetic custom labels are not human-reviewed. No tuning or model changes may use these test results. Custom hold-out is template-family synthetic data, not realistic external prevalence.
+
 ## Privacy and limits
 
 No submitted message, transcript, phone number, media or URL is retained in history. Only high-risk metadata is retained. Abuse cues are masked. Models remain experimental; low risk does not establish safety. OCR can miss links. Synthetic English speech integration checks do not establish Urdu voice accuracy.

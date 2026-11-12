@@ -42,6 +42,11 @@ npm ci
 npm run gen:types
 ```
 
+For an existing demo on another local checkout, copy the trusted `text_clf.joblib`
+and `url_clf.joblib` together with their matching `.manifest.json` files into
+`backend/models/`. The ignored synthetic draft is also required to reconstruct
+the exact text partitions. Keep those artifacts local.
+
 Media weights/setup: docs/MEDIA.md. Text/URL model provenance: docs/MODEL_COMPARISON.md,
 docs/URL_MODEL.md and docs/URL_ROBUSTNESS_RESULTS.json. Missing inference models return503;
 no pretend predictions are substituted. To run services manually:
