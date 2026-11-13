@@ -305,3 +305,11 @@ Final one-shot evaluation COMPLETE. This supersedes all earlier notes that the t
 
 ## M9 WhatsApp continuation — 2026-11-13
 Implemented dedicated-account bridge, authenticated text/media endpoints, guardian confirmation/STOP, owner opt-in, atomic dedupe and rate limits, and Settings synthetic simulator. See whatsapp/README.md. Actual account pairing and live alert delivery require the dedicated demo account and consenting guardian. No real account was paired and no real messages were sent. Keep local credentials, auth state, runtime databases, and artifacts out of Git.
+
+WhatsApp PR #3 merged into dev at 58a738a413f1224c3a74c411c46df42498a4ed64. Updated and verified submission ZIP includes the bridge, lockfile, setup and core report. Live pairing and delivery still require dedicated account and guardian opt-in.
+
+Settings now includes authenticated WhatsApp QR and connection status. Start the configured bridge, then unlock the QR with the local bridge key. Pairing endpoint binds only to 127.0.0.1:8011. Real QR requires a configured dedicated account.
+
+WhatsApp transport now launches headless Chromium with whatsapp-web.js. Settings displays its QR via the authenticated loopback endpoint. No Meta API key. Dedicated-account QR scan and guardian consent still require real devices.
+
+Settings pairing now uses the local FastAPI proxy; bridge key stays server-side. Connected Settings displays guardian consent and an expiring command. High-risk delivery uses the linked account self-chat and the configured guardian. Local dry-run disabled at user request; owner and guardian consent still gate delivery. Live verification requires an active linked session and guardian opt-in.

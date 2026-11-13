@@ -1,3 +1,4 @@
+import { WhatsAppPairing } from "../components/WhatsAppPairing";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSettings, simulateWhatsApp } from "../api";
 import { ErrorNotice, Loading, PageHeader } from "../components/ui";
@@ -50,6 +51,7 @@ export default function Settings() {
           </section>
           <section className="panel">
             <h2>WhatsApp &amp; guardian</h2>
+            <WhatsAppPairing />
             <p className="muted">Pair a dedicated account and manage consent in the local bridge. The simulator uses a built-in example and sends zero messages.</p>
             <button type="button" className="secondary" disabled={simulation.isPending} onClick={() => simulation.mutate()}>
               {simulation.isPending ? "Running…" : "Simulate WhatsApp alert"}

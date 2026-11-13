@@ -539,6 +539,28 @@
         }
       }
     },
+    "/api/whatsapp/pairing": {
+      "get": {
+        "tags": [
+          "whatsapp"
+        ],
+        "summary": "Pairing Status",
+        "description": "Expose pairing only to the local Settings UI. Keep bridge credentials server-side.",
+        "operationId": "pairing_status_api_whatsapp_pairing_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairingStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/": {
       "get": {
         "summary": "Root",
@@ -1198,6 +1220,57 @@
           "best_model"
         ],
         "title": "ModelMetrics"
+      },
+      "PairingStatus": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "qr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qr"
+          },
+          "guardian_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guardian Enabled"
+          },
+          "guardian_command": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guardian Command"
+          },
+          "dry_run": {
+            "type": "boolean",
+            "title": "Dry Run",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "PairingStatus"
       },
       "Probabilities": {
         "properties": {
