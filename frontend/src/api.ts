@@ -70,3 +70,12 @@ export const analyzeFile = (file: File, signal?: AbortSignal) => {
     300000,
   );
 };
+
+export const simulateWhatsApp = () =>
+  request<components["schemas"]["Decision"]>("/simulate/whatsapp", { method: "POST" });
+
+export const getWhatsAppPairing = (signal?: AbortSignal) =>
+  request<components["schemas"]["PairingStatus"]>("/whatsapp/pairing", {
+    headers: { "X-Nigehbaan-Settings": "1" },
+    signal,
+  });

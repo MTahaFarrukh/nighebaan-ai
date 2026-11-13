@@ -258,6 +258,309 @@
         }
       }
     },
+    "/api/consent": {
+      "get": {
+        "tags": [
+          "whatsapp"
+        ],
+        "summary": "Get Consent",
+        "operationId": "get_consent_api_consent_get",
+        "parameters": [
+          {
+            "name": "guardian",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Guardian"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsentStatus"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "whatsapp"
+        ],
+        "summary": "Set Consent",
+        "operationId": "set_consent_api_consent_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsentStatus"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/whatsapp/event": {
+      "post": {
+        "tags": [
+          "whatsapp"
+        ],
+        "summary": "Event",
+        "operationId": "event_api_whatsapp_event_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Event"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Decision"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/whatsapp/media": {
+      "post": {
+        "tags": [
+          "whatsapp"
+        ],
+        "summary": "Media Event",
+        "operationId": "media_event_api_whatsapp_media_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_media_event_api_whatsapp_media_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Decision"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/simulate/whatsapp": {
+      "post": {
+        "tags": [
+          "whatsapp"
+        ],
+        "summary": "Simulate",
+        "operationId": "simulate_api_simulate_whatsapp_post",
+        "parameters": [
+          {
+            "name": "case",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "scam",
+                "normal"
+              ],
+              "type": "string",
+              "default": "scam",
+              "title": "Case"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Decision"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/whatsapp/pairing": {
+      "get": {
+        "tags": [
+          "whatsapp"
+        ],
+        "summary": "Pairing Status",
+        "description": "Expose pairing only to the local Settings UI. Keep bridge credentials server-side.",
+        "operationId": "pairing_status_api_whatsapp_pairing_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairingStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/": {
       "get": {
         "summary": "Root",
@@ -510,6 +813,32 @@
         ],
         "title": "Body_analyze_file_api_analyze_file_post"
       },
+      "Body_media_event_api_whatsapp_media_post": {
+        "properties": {
+          "guardian": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Guardian"
+          },
+          "sender": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Sender"
+          },
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "guardian",
+          "sender",
+          "file"
+        ],
+        "title": "Body_media_event_api_whatsapp_media_post"
+      },
       "ClassMetric": {
         "properties": {
           "p": {
@@ -532,6 +861,128 @@
           "f1"
         ],
         "title": "ClassMetric"
+      },
+      "ConsentRequest": {
+        "properties": {
+          "guardian": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Guardian"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "guardian",
+          "enabled"
+        ],
+        "title": "ConsentRequest"
+      },
+      "ConsentStatus": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled"
+        ],
+        "title": "ConsentStatus"
+      },
+      "Decision": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "should_alert": {
+            "type": "boolean",
+            "title": "Should Alert",
+            "default": false
+          },
+          "dry_run": {
+            "type": "boolean",
+            "title": "Dry Run",
+            "default": true
+          },
+          "risk_level": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Level"
+          },
+          "rule_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Rule Ids"
+          },
+          "alert_user_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Alert User Text"
+          },
+          "alert_guardian_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Alert Guardian Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reason"
+        ],
+        "title": "Decision"
+      },
+      "Event": {
+        "properties": {
+          "guardian": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Guardian"
+          },
+          "sender": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Sender"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 12000,
+            "minLength": 1,
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "guardian",
+          "sender",
+          "text"
+        ],
+        "title": "Event"
       },
       "FileAnalyzeResponse": {
         "properties": {
@@ -769,6 +1220,57 @@
           "best_model"
         ],
         "title": "ModelMetrics"
+      },
+      "PairingStatus": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "qr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qr"
+          },
+          "guardian_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guardian Enabled"
+          },
+          "guardian_command": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guardian Command"
+          },
+          "dry_run": {
+            "type": "boolean",
+            "title": "Dry Run",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "PairingStatus"
       },
       "Probabilities": {
         "properties": {

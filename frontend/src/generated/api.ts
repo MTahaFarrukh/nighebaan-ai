@@ -144,6 +144,95 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/consent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Consent */
+        get: operations["get_consent_api_consent_get"];
+        put?: never;
+        /** Set Consent */
+        post: operations["set_consent_api_consent_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/whatsapp/event": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Event */
+        post: operations["event_api_whatsapp_event_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/whatsapp/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Media Event */
+        post: operations["media_event_api_whatsapp_media_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/simulate/whatsapp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Simulate */
+        post: operations["simulate_api_simulate_whatsapp_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/whatsapp/pairing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Pairing Status
+         * @description Expose pairing only to the local Settings UI. Keep bridge credentials server-side.
+         */
+        get: operations["pairing_status_api_whatsapp_pairing_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -251,6 +340,15 @@ export interface components {
             /** File */
             file: string;
         };
+        /** Body_media_event_api_whatsapp_media_post */
+        Body_media_event_api_whatsapp_media_post: {
+            /** Guardian */
+            guardian: string;
+            /** Sender */
+            sender: string;
+            /** File */
+            file: string;
+        };
         /** ClassMetric */
         ClassMetric: {
             /** P */
@@ -259,6 +357,50 @@ export interface components {
             r: number;
             /** F1 */
             f1: number;
+        };
+        /** ConsentRequest */
+        ConsentRequest: {
+            /** Guardian */
+            guardian: string;
+            /** Enabled */
+            enabled: boolean;
+        };
+        /** ConsentStatus */
+        ConsentStatus: {
+            /** Enabled */
+            enabled: boolean;
+        };
+        /** Decision */
+        Decision: {
+            /** Reason */
+            reason: string;
+            /**
+             * Should Alert
+             * @default false
+             */
+            should_alert: boolean;
+            /**
+             * Dry Run
+             * @default true
+             */
+            dry_run: boolean;
+            /** Risk Level */
+            risk_level?: string | null;
+            /** Rule Ids */
+            rule_ids?: string[];
+            /** Alert User Text */
+            alert_user_text?: string | null;
+            /** Alert Guardian Text */
+            alert_guardian_text?: string | null;
+        };
+        /** Event */
+        Event: {
+            /** Guardian */
+            guardian: string;
+            /** Sender */
+            sender: string;
+            /** Text */
+            text: string;
         };
         /**
          * FileAnalyzeResponse
@@ -336,6 +478,22 @@ export interface components {
             best_url_model?: string | null;
             /** Ablations */
             ablations?: components["schemas"]["Ablation"][];
+        };
+        /** PairingStatus */
+        PairingStatus: {
+            /** Status */
+            status: string;
+            /** Qr */
+            qr?: string | null;
+            /** Guardian Enabled */
+            guardian_enabled?: boolean | null;
+            /** Guardian Command */
+            guardian_command?: string | null;
+            /**
+             * Dry Run
+             * @default true
+             */
+            dry_run: boolean;
         };
         /**
          * Probabilities
@@ -618,6 +776,195 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PublicSettings"];
+                };
+            };
+        };
+    };
+    get_consent_api_consent_get: {
+        parameters: {
+            query: {
+                guardian: string;
+            };
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentStatus"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_consent_api_consent_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConsentRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentStatus"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    event_api_whatsapp_event_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Event"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Decision"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    media_event_api_whatsapp_media_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_media_event_api_whatsapp_media_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Decision"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    simulate_api_simulate_whatsapp_post: {
+        parameters: {
+            query?: {
+                case?: "scam" | "normal";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Decision"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pairing_status_api_whatsapp_pairing_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PairingStatus"];
                 };
             };
         };
