@@ -70,3 +70,6 @@ export const analyzeFile = (file: File, signal?: AbortSignal) => {
     300000,
   );
 };
+
+export const simulateWhatsApp = () =>
+  request<components["schemas"]["Decision"]>("/simulate/whatsapp", { method: "POST" });

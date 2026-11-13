@@ -536,3 +536,7 @@ Public settings add max_upload_mb, max_pdf_pages and max_media_seconds. File UI 
 30,000-character extraction limit rejects larger content rather than silently analyzing a prefix.
 Errors: 413 limits, 415 unsupported/mismatch, 422 unreadable/no text, 429 media busy, 503 missing model.
 See docs/MEDIA.md for processing, limits, setup, privacy and measured extraction limitations.
+
+### M9 local bridge contract
+
+Authenticated GET and POST /api/consent use a keyed guardian digest. POST /api/whatsapp/event accepts text and keyed sender/guardian digests. POST /api/whatsapp/media accepts the same digests and a bounded multipart media upload. Both return Decision: reason, should_alert, dry_run, risk_level, rule_ids, and optional generic alert text. POST /api/simulate/whatsapp runs a built-in example with no persistence or outbound delivery. The local bridge binds analysis to an opted-in dedicated account and accepts a time-limited confirmation only from the configured guardian. STOP revokes consent. See whatsapp/README.md.
