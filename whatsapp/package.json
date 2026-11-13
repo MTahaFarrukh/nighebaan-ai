@@ -1,0 +1,1 @@
+{"name":"nigehbaan-whatsapp","private":true,"type":"module","scripts":{"dev":"node --env-file-if-exists=.env bridge.mjs","test":"node --test"},"engines":{"node":">=22"},"dependencies":{"@whiskeysockets/baileys":"6.7.24","pino":"^9.0.0","qrcode-terminal":"0.12.0"}}

@@ -1,7 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
-import { getSettings } from "../api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getSettings, simulateWhatsApp } from "../api";
 import { ErrorNotice, Loading, PageHeader } from "../components/ui";
 export default function Settings() {
+  const simulation = useMutation({ mutationFn: simulateWhatsApp });
   const query = useQuery({
     queryKey: ["settings"],
     queryFn: ({ signal }) => getSettings(signal),
@@ -48,19 +49,16 @@ export default function Settings() {
             </p>
           </section>
           <section className="panel">
-            <span className="badge neutral">Not connected</span>
             <h2>WhatsApp &amp; guardian</h2>
-            <p className="muted">
-              No messages or alerts are sent. Consent, guardian setup and
-              WhatsApp simulation will be available with the WhatsApp
-              integration.
-            </p>
-            <div className="notice">
-              Guardian contact details are not collected in this version.
-            </div>
-            <button disabled className="secondary">
-              Connect WhatsApp · coming later
+            <p className="muted">Pair a dedicated account and manage consent in the local bridge. The simulator uses a built-in example and sends zero messages.</p>
+            <button type="button" className="secondary" disabled={simulation.isPending} onClick={() => simulation.mutate()}>
+              {simulation.isPending ? "Running…" : "Simulate WhatsApp alert"}
             </button>
+            <div role="status">
+              {simulation.data?.alert_guardian_text && <p>{simulation.data.alert_guardian_text}</p>}
+              {simulation.data && !simulation.data.should_alert && <p>No alert triggered.</p>}
+              {simulation.isError && <p>Simulation failed. Check the backend and text model.</p>}
+            </div>
           </section>
         </div>
       )}
