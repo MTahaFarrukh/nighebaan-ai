@@ -2,10 +2,23 @@
 
 import hashlib
 import hmac
+import json
 import os
 from typing import Annotated, Literal
+from urllib.request import Request as LocalRequest
+from urllib.request import urlopen
 
-from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, UploadFile
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    Form,
+    Header,
+    HTTPException,
+    Request,
+    Response,
+    UploadFile,
+)
 from pydantic import BaseModel, Field
 from starlette.concurrency import run_in_threadpool
 
@@ -157,3 +170,40 @@ def simulate(case: Literal["scam", "normal"] = "scam") -> Decision:
         else "Kal class kitne bajay hai?"
     )
     return decide(text_analysis.analyze(text))
+
+
+class PairingStatus(BaseModel):
+    status: str
+    qr: str | None = None
+    guardian_enabled: bool | None = None
+    guardian_command: str | None = None
+    dry_run: bool = True
+
+
+@router.get("/whatsapp/pairing", response_model=PairingStatus)
+def pairing_status(request: Request, response: Response) -> PairingStatus:
+    """Expose pairing only to the local Settings UI. Keep bridge credentials server-side."""
+    if (
+        not request.client
+        or request.client.host not in {"127.0.0.1", "::1"}
+        or request.url.hostname not in {"localhost", "127.0.0.1", "::1"}
+        or request.headers.get("origin") != "http://localhost:5173"
+        or request.headers.get("x-nigehbaan-settings") != "1"
+    ):
+        raise HTTPException(403, "Pairing is available from local Settings only.")
+    response.headers["Cache-Control"] = "no-store"
+    key = os.getenv("WHATSAPP_API_KEY", "")
+    if len(key) < 32:
+        return PairingStatus(status="setup required")
+    bridge = LocalRequest(
+        "http://127.0.0.1:8011/pairing",
+        headers={"X-API-Key": key, "Origin": "http://localhost:5173"},
+    )
+    try:
+        with urlopen(bridge, timeout=3) as result:
+            state = PairingStatus.model_validate(json.load(result))
+            return state.model_copy(
+                update={"dry_run": state.dry_run or alert_policy.dry_run()}
+            )
+    except (OSError, ValueError):
+        return PairingStatus(status="bridge unavailable")

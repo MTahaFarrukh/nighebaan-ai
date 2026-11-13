@@ -213,6 +213,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/whatsapp/pairing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Pairing Status
+         * @description Expose pairing only to the local Settings UI. Keep bridge credentials server-side.
+         */
+        get: operations["pairing_status_api_whatsapp_pairing_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -458,6 +478,22 @@ export interface components {
             best_url_model?: string | null;
             /** Ablations */
             ablations?: components["schemas"]["Ablation"][];
+        };
+        /** PairingStatus */
+        PairingStatus: {
+            /** Status */
+            status: string;
+            /** Qr */
+            qr?: string | null;
+            /** Guardian Enabled */
+            guardian_enabled?: boolean | null;
+            /** Guardian Command */
+            guardian_command?: string | null;
+            /**
+             * Dry Run
+             * @default true
+             */
+            dry_run: boolean;
         };
         /**
          * Probabilities
@@ -909,6 +945,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pairing_status_api_whatsapp_pairing_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PairingStatus"];
                 };
             };
         };
