@@ -146,7 +146,4 @@ integration, not OCR, transcription, or scam-detection accuracy.
 - [Technical documentation](docs/TECH_DOC.md)
 - [Setup and troubleshooting](SETUP-WINDOWS.md)
 - [Media setup and limits](docs/MEDIA.md)
-- [Demo steps](docs/DEMO.md)
-- [Viva guide](report/VIVA.md)
 - [CCP report](report/Nigehbaan_AI_CCP_Report.md)
-- [Current handoff and remaining work](docs/HANDOFF.md)
