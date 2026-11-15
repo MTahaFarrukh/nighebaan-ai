@@ -404,3 +404,13 @@ README was refreshed with truthful stack badges, setup instructions, a local-inf
 and privacy/WhatsApp limitations. Still pending: realistic Roman Urdu media evaluation, human
 label review/kappa, guardian-threshold calibration, and dedicated-consent live WhatsApp pairing
 if live transport is to be claimed. Do not configure Gemini or send user media to a model provider.
+
+## Viva demo documentation refresh
+
+Rewrote `report/DEMO_SCRIPT.md` as an 8–10 minute teacher walkthrough covering Analyze (text, URL,
+PDF, image, audio, video), Dashboard, Model Lab, Settings, and About/Ethics. Added Windows
+preflight steps and synthetic-only input guidance. Clarified that the Settings WhatsApp simulator
+neither sends a message nor creates Dashboard history; live pairing/delivery remain unverified.
+Updated `docs/DEMO.md` to match and removed its stale claim that desktop/mobile browser QA passed;
+interactive browser recording did not complete successfully. No application code or model artifacts
+changed. Remaining academic and live-WhatsApp limitations above still apply.
