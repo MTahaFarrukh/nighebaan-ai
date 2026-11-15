@@ -116,27 +116,32 @@ export default function Dashboard() {
                   <div className="chart">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={days}>
-                        <CartesianGrid stroke="#263944" vertical={false} />
+                        <CartesianGrid
+                          stroke="rgba(156,191,206,0.12)"
+                          vertical={false}
+                        />
                         <XAxis
                           dataKey="day"
-                          tick={{ fill: "#91a6b2", fontSize: 11 }}
+                          tick={{ fill: "#8fa9b4", fontSize: 11 }}
                         />
                         <YAxis
                           allowDecimals={false}
-                          tick={{ fill: "#91a6b2", fontSize: 11 }}
+                          tick={{ fill: "#8fa9b4", fontSize: 11 }}
                         />
                         <Tooltip
                           contentStyle={{
-                            background: "#152631",
-                            border: "1px solid #38505d",
-                            color: "#f3f7f8",
+                            background: "#0e2230",
+                            border: "1px solid rgba(156,191,206,0.2)",
+                            borderRadius: "12px",
+                            color: "#eef6f8",
+                            boxShadow: "0 16px 40px rgba(1,8,14,0.3)",
                           }}
                         />
                         <Bar
                           dataKey="count"
                           name="High-risk results"
-                          fill="#4dd9ba"
-                          radius={[4, 4, 0, 0]}
+                          fill="#72e6c6"
+                          radius={[6, 6, 0, 0]}
                         />
                       </BarChart>
                     </ResponsiveContainer>

@@ -414,3 +414,44 @@ neither sends a message nor creates Dashboard history; live pairing/delivery rem
 Updated `docs/DEMO.md` to match and removed its stale claim that desktop/mobile browser QA passed;
 interactive browser recording did not complete successfully. No application code or model artifacts
 changed. Remaining academic and live-WhatsApp limitations above still apply.
+
+## Frontend visual polish
+
+Refined the shared theme and styling for the navigation shell, page headers, cards, forms, badges,
+tables, charts, upload area, loading state, and responsive layouts. Added slow ambient background
+motion, staged entrances, hover feedback, and a loading indicator; `prefers-reduced-motion` disables
+the motion. Dashboard and Model Lab chart colors were aligned with the refreshed palette.
+No routes, state handling, API calls, analysis behavior, or data contracts changed.
+
+Verification: `npm run lint` and `npm run build` passed (build includes TypeScript compilation).
+Browser checks confirmed Analyze and Dashboard render, mobile width 390px has no horizontal page
+overflow, and reduced-motion hides the ambient animation. Interactive visual capture was
+inconsistent in the shared browser, so do not claim a complete screenshot-by-screenshot QA of all
+five pages. No functionality tests were added because behavior was not changed.
+
+## Animated Home landing page - 2026-11-16
+
+Added a new Home route as the app's default entry and updated the brand link/navigation. The Home
+page contains the animated local-safety hero, feature overview, three-step flow and Analyze CTA.
+The existing Analyze, Dashboard, Model Lab, Settings and About routes remain available; analysis
+requests, APIs and data handling were not changed. Motion uses local CSS/SVG only and respects
+`prefers-reduced-motion`. Styles are separated into focused landing and analysis-result files.
+Updated README startup destination, TECH_DOC page inventory, and both demo guides.
+
+Verification: `npm run lint`, `npm run build` (including TypeScript compilation), and
+`git diff --check` passed. Browser checks confirmed the root route opens Home, its Analyze link
+targets `#/analyze`, the existing Analyze page renders, a 390px viewport has no horizontal
+overflow, and reduced-motion disables the hero animations. The shared browser's physical click
+action remained unstable; do not claim a complete interactive click-through of every route.
+
+## Vibrant glass UI iteration - 2026-11-16
+
+Reworked the Home hero visual from orbit artwork into a layered glass signal-flow illustration
+with a moving scan beam, animated waveform, floating panels and clear "illustrative" labeling.
+Updated the shared color palette, navigation, cards, form controls and data surfaces to use
+vibrant violet/cyan glass treatments and stronger hover feedback. No analysis, API, route or
+data behavior changed. Motion respects reduced-motion preferences.
+
+Verification: frontend lint and production build passed. Browser confirmed the Home hero renders,
+scan animation is active normally and removed by reduced-motion, the 390px layout has no
+horizontal overflow, and Dashboard cards use the glass blur treatment.

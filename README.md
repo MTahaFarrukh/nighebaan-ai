@@ -62,7 +62,8 @@ From the repository root:
 powershell -File scripts/start-demo.ps1
 ```
 
-Open [http://localhost:5173/#/analyze](http://localhost:5173/#/analyze). The launcher reuses
+Open [http://localhost:5173/](http://localhost:5173/). The animated Home page is the default;
+choose Analyze from the navigation to inspect a message, URL, or file. The launcher reuses
 ready local services, opens new processes hidden, and disables API access logging. It does
 not train models or download weights. If a port is already in use, resolve that conflict
 rather than stopping an unknown process.

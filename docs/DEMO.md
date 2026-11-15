@@ -5,7 +5,7 @@ The CCP write-up is [report/Nigehbaan_AI_CCP_Report.md](../report/Nigehbaan_AI_C
 
 ## Preflight
 
-1. From the repository root, run `powershell -File scripts/start-demo.ps1` and open the printed preview.
+1. From the repository root, run `powershell -File scripts/start-demo.ps1` and open the printed preview. It opens on the animated Home page; use its Analyze link to begin the feature walkthrough.
 2. Confirm text/URL artifacts are available. For media, prepare the synthetic files in `backend/data/raw/media_demo` and confirm local OCR/Whisper weights are installed. Run `python -m ml.smoke_media` from `backend` before the viva if you need to verify all four media paths; it is a preflight, not a timed demo step.
 3. Use only synthetic inputs. Keep WhatsApp in dry-run mode; do not show personal chats, credentials, or QR codes.
 

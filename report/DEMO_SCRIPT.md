@@ -13,7 +13,9 @@ This walkthrough demonstrates the current local application using synthetic inpu
 
 ## Presentation
 
-### 1. Introduce the system (about 45 seconds)
+### 1. Start on Home and introduce the system (about 45 seconds)
+
+Begin on the animated Home page. Briefly point out the three-step overview and use **Start an analysis** to open the existing analyzer.
 
 > “Nigehbaan AI analyzes text, URLs, and text extracted from media for scam and abusive-content indicators. It combines machine-learning predictions with explainable rules. Media processing is local; Gemini is not required. The result is a decision-support signal, not proof that a message is safe or harmful.”
 

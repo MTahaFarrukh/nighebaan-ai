@@ -2,11 +2,13 @@ import { lazy, Suspense } from "react";
 import { Loading } from "./components/ui";
 import { HashRouter, NavLink, Navigate, Route, Routes } from "react-router-dom";
 import Analyze from "./pages/Analyze";
+import Home from "./pages/Home";
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const ModelLab = lazy(() => import("./pages/ModelLab"));
 import Settings from "./pages/Settings";
 import About from "./pages/About";
 const navigation = [
+  { path: "/home", label: "Home", icon: "⌂" },
   { path: "/analyze", label: "Analyze", icon: "⌕" },
   { path: "/dashboard", label: "Dashboard", icon: "▦" },
   { path: "/models", label: "Model Lab", icon: "◈" },
@@ -28,7 +30,7 @@ export default function App() {
       </a>
       <div className="app-shell">
         <aside className="sidebar">
-          <a className="brand" href="#/analyze">
+          <a className="brand" href="#/home">
             <span className="brand-mark" aria-hidden="true">
               N
             </span>
@@ -66,12 +68,13 @@ export default function App() {
           <main id="main" tabIndex={-1}>
             <Suspense fallback={<Loading />}>
               <Routes>
+                <Route path="/home" element={<Home />} />
                 <Route path="/analyze" element={<Analyze />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/models" element={<ModelLab />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/about" element={<About />} />
-                <Route path="*" element={<Navigate to="/analyze" replace />} />
+                <Route path="*" element={<Navigate to="/home" replace />} />
               </Routes>
             </Suspense>
             <footer>

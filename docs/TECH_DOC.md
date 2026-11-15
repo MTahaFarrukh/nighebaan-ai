@@ -361,6 +361,7 @@ The local history stores `ts, modality, label, risk_score, risk_level, rule_ids,
 
 | Page | Contents |
 |---|---|
+| **Home** | Animated product overview, links to the existing analysis and information pages, and privacy/safety principles |
 | **Analyze** | Tabs: Text / URL / File (drag-drop). Result card: label badge, risk meter (green / amber / red), rule chips, highlighted flagged words, explanation, extracted-text preview with a "hide" toggle, latency |
 | **Dashboard** | High-risk web and WhatsApp history, source/modality breakdown, risk status and timeline (Recharts); message content is never shown or stored |
 | **Model Lab** | Model comparison table and macro-F1 bars (from `/metrics/models`), confusion matrix heatmap, ablation tables |
@@ -509,7 +510,8 @@ benign/phishing class order) and best_url_model, separate from the three-class t
 Historical M5 validation did not use the URL model; do not describe that score as M6 full-text validation.
 
 ### M8 web interface and public contracts (2026-11-11)
-Five hash-routed pages: Analyze, Dashboard, Model Lab, Settings, About/Ethics.
+Six hash-routed pages: Home, Analyze, Dashboard, Model Lab, Settings, About/Ethics. The root
+route opens Home; the existing Analyze page and its analysis behavior remain unchanged.
 GET /api/metrics/models returns the allowlisted aggregate ModelMetrics schema; text and URL
 class sets remain separate. Missing/malformed report returns 503. Unknown metadata is not exposed.
 GET /api/alerts?limit=20&offset=0 returns AlertHistory: items, total, limit, offset,

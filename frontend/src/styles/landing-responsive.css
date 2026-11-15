@@ -1,0 +1,57 @@
+@media (max-width: 1020px) {
+  .landing-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(270px, 0.8fr);
+    gap: 18px;
+    min-height: 450px;
+    padding: 34px;
+  }
+  .landing-hero h1 { font-size: clamp(2.8rem, 5vw, 4rem); }
+  .hero-assurances { gap: 9px 13px; }
+  .hero-art { width: min(100%, 400px); height: 370px; }
+  .landing-feature-card { padding: 21px; }
+}
+
+@media (max-width: 820px) {
+  .landing-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 34px clamp(22px, 5vw, 42px) 25px;
+  }
+  .landing-copy { max-width: 720px; }
+  .landing-hero h1 { max-width: 700px; font-size: clamp(3rem, 8vw, 4.5rem); }
+  .hero-art { width: min(92%, 430px); height: 380px; margin: -4px auto -15px; }
+  .section-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .section-heading > p { max-width: 560px; }
+  .landing-feature-grid { grid-template-columns: 1fr; gap: 12px; }
+  .landing-feature-card { min-height: 0; }
+  .process-grid { gap: 21px; }
+}
+
+@media (max-width: 560px) {
+  .landing-hero { gap: 10px; margin-bottom: 55px; padding: 27px 20px 20px; border-radius: 22px; }
+  .hero-kicker { margin-bottom: 20px; padding: 7px 10px; font-size: 0.54rem; letter-spacing: 0.1em; }
+  .landing-hero h1 { margin-bottom: 17px; font-size: clamp(2.7rem, 11vw, 3.5rem); }
+  .hero-description { margin-bottom: 21px; font-size: 0.9rem; }
+  .hero-assurances { gap: 9px 13px; margin-top: 22px; font-size: 0.66rem; }
+  .hero-art { width: 100%; height: 310px; margin: 3px auto -8px; }
+  .hero-glass-card-side { display: none; }
+  .landing-features, .landing-process { margin-bottom: 52px; }
+  .section-heading h2, .process-heading h2 { font-size: 1.55rem; line-height: 1.17; }
+  .landing-feature-card { padding: 20px; }
+  .landing-process { padding: 23px 20px; border-radius: 18px; }
+  .process-heading { margin-bottom: 25px; }
+  .process-grid { grid-template-columns: 1fr; gap: 22px; }
+  .process-grid::before {
+    top: 16px;
+    bottom: 20px;
+    left: 17px;
+    width: 1px;
+    height: auto;
+    background: linear-gradient(180deg, rgb(117 232 255 / 38%), rgb(149 108 255 / 22%), transparent);
+  }
+  .process-grid article { display: grid; grid-template-columns: 35px 1fr; column-gap: 15px; }
+  .process-index { grid-row: span 2; margin: 0; }
+  .process-grid h3 { align-self: center; }
+  .process-grid p { grid-column: 2; }
+  .landing-cta { align-items: flex-start; flex-direction: column; padding: 23px 20px; }
+}

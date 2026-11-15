@@ -123,28 +123,33 @@ export default function ModelLab() {
                       data={rows}
                       margin={{ left: 0, right: 15, bottom: 10 }}
                     >
-                      <CartesianGrid stroke="#263944" vertical={false} />
+                      <CartesianGrid
+                        stroke="rgba(156,191,206,0.12)"
+                        vertical={false}
+                      />
                       <XAxis
                         dataKey="name"
-                        tick={{ fill: "#91a6b2", fontSize: 11 }}
+                        tick={{ fill: "#8fa9b4", fontSize: 11 }}
                         interval={0}
                       />
                       <YAxis
                         domain={[0, 1]}
-                        tick={{ fill: "#91a6b2", fontSize: 11 }}
+                        tick={{ fill: "#8fa9b4", fontSize: 11 }}
                       />
                       <Tooltip
                         contentStyle={{
-                          background: "#152631",
-                          border: "1px solid #38505d",
-                          color: "#f3f7f8",
+                          background: "#0e2230",
+                          border: "1px solid rgba(156,191,206,0.2)",
+                          borderRadius: "12px",
+                          color: "#eef6f8",
+                          boxShadow: "0 16px 40px rgba(1,8,14,0.3)",
                         }}
                       />
                       <Bar
                         dataKey="macro_f1"
                         name="Macro-F1"
-                        fill="#4dd9ba"
-                        radius={[4, 4, 0, 0]}
+                        fill="#72e6c6"
+                        radius={[6, 6, 0, 0]}
                       />
                     </BarChart>
                   </ResponsiveContainer>
@@ -190,7 +195,7 @@ export default function ModelLab() {
                             <td
                               key={column}
                               style={{
-                                background: `rgba(77,217,186,${0.06 + (0.35 * value) / maxCell})`,
+                                background: `rgba(114,230,198,${0.06 + (0.35 * value) / maxCell})`,
                               }}
                             >
                               {value.toLocaleString()}
