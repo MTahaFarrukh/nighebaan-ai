@@ -377,3 +377,30 @@ Aligned the README, Windows setup, agent privacy rules, technical spec, project 
 Final checks: backend `178 passed`; Ruff passed for the changed Python files; frontend OpenAPI generation, typecheck, lint, and production build passed; `node --check whatsapp/bridge.mjs` passed; `git diff --check` passed. WhatsApp `npm test` passes but finds zero Node test files. WhatsApp decisions now report whether high-risk metadata was saved; failures emit a content-free warning and are covered by a privacy regression test. Browser Dashboard rendered with existing web metadata; there are no live WhatsApp records because no device was paired. No real messages or alerts were sent.
 
 Exact remaining submission work: independently review custom labels and compute genuine kappa if two annotators are available; review URL and realistic Urdu-media behavior; calibrate guardian thresholds; pair/test only with a dedicated account after obtaining recipient agreement; render the final report and verify pages/figures. Do not rerun or tune from the frozen final evaluation.
+
+## Current multimodal runtime check - 2026-11-15
+
+Gemini is not part of this design. Web uploads and WhatsApp media use the same local extractor
+pipeline (PyMuPDF, EasyOCR, FFmpeg and faster-whisper); model weights are not committed and
+requests do not download them. With user approval, official OCR and pinned Whisper weights were
+installed in the ignored local cache. The first audio check found PyAV 19 incompatible with
+faster-whisper's `metadata_errors` API; `backend/requirements.txt` now bounds PyAV to `>=11,<19`
+(installed/tested 18.1.0).
+
+`python -m ml.smoke_media` passed synthetic PDF, image, spoken audio, and spoken video (200),
+and rejected the pure tone as expected (422). `backend/models/media_smoke.json` stores aggregate
+counts only. Added a consented synthetic WhatsApp PDF multipart regression; it passed and
+recorded only high-risk metadata. Both WhatsApp text/media use the same shared extractor, but
+live Baileys media download, pairing, and alert delivery remain unverified.
+
+Backend suite: 179 passed. Frontend standalone validation: 5/5 assertions passed (typecheck,
+lint, build, Vitest file-upload request test, and HTTP startup probe); result:
+`frontend/.tsupgrader/runtime-validation/standalone-result.json`. The browser-recording attempt
+failed during interaction, so the validation plan uses the documented HTTP fallback. `npm ci`
+could not replace a locked native file while an existing Vite process was running; dependencies
+were restored with `npm install`, and this local runtime plan omits reinstall.
+
+README was refreshed with truthful stack badges, setup instructions, a local-inference overview,
+and privacy/WhatsApp limitations. Still pending: realistic Roman Urdu media evaluation, human
+label review/kappa, guardian-threshold calibration, and dedicated-consent live WhatsApp pairing
+if live transport is to be claimed. Do not configure Gemini or send user media to a model provider.

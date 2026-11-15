@@ -16,4 +16,5 @@ pillow
 filetype
 imageio-ffmpeg
 faster-whisper
+av>=11,<19
 easyocr

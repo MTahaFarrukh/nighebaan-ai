@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
+    "test": "vitest run",
     "gen:types": "node scripts/export-api.mjs && openapi-typescript openapi.json -o src/generated/api.ts"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "tailwindcss": "^4.3.3",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.72.2",
+    "vitest": "^4.0.0",
     "vite": "^8.3.4"
   },
   "dependencies": {

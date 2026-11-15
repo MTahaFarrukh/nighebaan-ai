@@ -2,10 +2,18 @@
 
 import sqlite3
 
+import pymupdf
 from app.main import app
 from app.services import alert_policy
 from app.services import history
 from fastapi.testclient import TestClient
+
+
+def synthetic_pdf() -> bytes:
+    with pymupdf.open() as document:
+        page = document.new_page()
+        page.insert_text((72, 72), "Foran OTP bhejo https://example.com")
+        return document.tobytes()
 
 
 def test_history_write_failure_is_reported_without_message_content(
@@ -92,3 +100,42 @@ def test_bridge_policy(tmp_path, monkeypatch, fake_text_model):
     assert b"example.com" not in alert_policy.DB.read_bytes()
     assert b"example.com" not in history.DB_PATH.read_bytes()
     assert client.post("/api/simulate/whatsapp").json()["dry_run"]
+
+
+def test_consented_whatsapp_pdf_media_is_analyzed_and_recorded(
+    tmp_path, monkeypatch, fake_text_model
+):
+    monkeypatch.setattr(alert_policy, "DB", tmp_path / "whatsapp.sqlite3")
+    monkeypatch.setenv("WHATSAPP_API_KEY", "x" * 32)
+    monkeypatch.setenv("WHATSAPP_OWNER_OPT_IN", "true")
+    monkeypatch.setenv("DRY_RUN", "true")
+    client = TestClient(app)
+    headers = {"X-API-Key": "x" * 32}
+    guardian = "a" * 64
+
+    consent = client.post(
+        "/api/consent",
+        json={"guardian": guardian, "enabled": True},
+        headers=headers,
+    )
+    assert consent.status_code == 200 and consent.json()["enabled"]
+    response = client.post(
+        "/api/whatsapp/media",
+        data={"guardian": guardian, "sender": "b" * 64},
+        files={
+            "file": ("synthetic.pdf", synthetic_pdf(), "application/pdf"),
+        },
+        headers=headers,
+    )
+
+    assert response.status_code == 200
+    result = response.json()
+    assert result["risk_level"] == "high"
+    assert result["should_alert"] and result["dry_run"]
+    assert result["history_recorded"] is True
+    assert "example.com" not in response.text
+    history_response = client.get("/api/alerts")
+    assert history_response.status_code == 200
+    assert history_response.json()["items"][0]["source"] == "whatsapp"
+    assert history_response.json()["items"][0]["modality"] == "media"
+    assert "example.com" not in str(history_response.json())

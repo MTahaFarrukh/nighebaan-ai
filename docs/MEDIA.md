@@ -44,7 +44,9 @@ uv pip install --python .venv/Scripts/python.exe -r requirements.txt
 .venv/Scripts/python.exe -m ml.setup_media --speech
 ```
 
-Weight cache: ignored models/media/. No system FFmpeg install is required; imageio-ffmpeg
+Weight cache: ignored models/media/. The `av<19` requirement keeps PyAV compatible with the
+`metadata_errors` option used by the installed faster-whisper audio decoder. No system FFmpeg
+install is required; imageio-ffmpeg
 supplies the local executable. The setup command alone downloads official model assets;
 user media is never sent to a model provider. Retry only the failed model, not all training.
 `python -m ml.make_media_demo` creates ignored synthetic PDF/PNG/tone/MP4 fixtures under
@@ -77,13 +79,16 @@ It writes aggregate status/rule/risk counts only to models/media_smoke.json, use
 and does not print or save any extracted transcript. Do not interpret synthetic checks as accuracy.
 
 
-## Completed runtime verification
+## Runtime verification status
 
-Speech weights installed successfully through the pinned resumable downloader and verified
-against the official SHA-256. `python -m ml.smoke_media` passed every synthetic case;
-aggregate evidence is in backend/models/media_smoke.json. Spoken English audio and video
-containing that audio produced readable text and risk results. A pure tone correctly returned
-422 (no readable speech), rather than a normal/low verdict. OCR still missed the link in the
-synthetic image/video; audio cues supplied the high risk in the spoken-video fixture.
-This is not a real-world Roman Urdu speech or OCR accuracy evaluation. Browser visual QA,
-realistic spelling/audio checks, URL false-positive work and alert calibration remain open.
+On the current Windows workspace (2026-11-15), official OCR and pinned Whisper weights were
+installed locally. The first audio run exposed a PyAV 19 API incompatibility with
+faster-whisper's `metadata_errors` option; `requirements.txt` now bounds PyAV to `>=11,<19`,
+and the verified local install uses PyAV 18.1.0.
+
+`python -m ml.smoke_media` now passes synthetic PDF, image, spoken audio, and spoken-video
+uploads (200), and correctly rejects a pure tone (422). Aggregate-only evidence is written to
+`backend/models/media_smoke.json`. This confirms local integration, not real-world Roman Urdu
+OCR/transcription accuracy. Model weights remain ignored and are not included in a checkout or
+submission archive. Browser visual QA, realistic spelling/audio checks, URL false-positive
+work, and alert calibration remain open.
