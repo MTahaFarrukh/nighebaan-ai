@@ -19,17 +19,18 @@ If another app occupies the ports, resolve the conflict rather than killing unkn
 
 - Text and URL analysis with risk scores, fired rules and explanations.
 - Local image/PDF/voice/video extraction, masked preview and warnings.
-- Dashboard of high-risk metadata only, Model Lab with real validation metrics,
+- Dashboard of high-risk web and WhatsApp metadata only, Model Lab with real validation metrics,
   read-only Settings, About/Ethics.
 - No input text, transcript, filenames, URLs or phone numbers saved in history.
 - No submitted URLs visited. Media temporary files cleaned after processing.
 
-WhatsApp is not connected and no guardian alerts are sent. Its integration remains bonus work.
+The Baileys WhatsApp bridge and authenticated text/media event path are implemented.
+Live pairing and alert delivery have not been verified; use the Settings simulator for the demo.
 Models are experimental; validation results are not final test or real-world safety guarantees.
 
 ## Fresh setup
 
-Python 3.11 and Node are required. Models and source data are intentionally not committed.
+Python 3.11 and Node.js 22+ are required. Models and source data are intentionally not committed.
 Read docs/HANDOFF.md before training: completed local runs must not be repeated.
 
 ```powershell

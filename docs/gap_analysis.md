@@ -1,6 +1,6 @@
 ---
 name: Gap analysis and finish
-overview: Nigehbaan AI is already a working hybrid ML + expert-system demo. Full marks are at risk mainly from a missing CCP report, unreviewed synthetic scam labels, a biased URL model that will fail live demo questions, and incomplete WhatsApp proof. Tomorrow should freeze the models and spend time on report, demo script, and viva answers—not retraining.
+overview: Nigehbaan AI is a working hybrid ML + expert-system demo with a CCP report, demo script, and viva notes. Remaining submission risks are unreviewed synthetic scam labels, URL source bias, incomplete media validation, and lack of live WhatsApp pairing/delivery evidence. Do not retrain or reuse the frozen test set.
 todos:
   - id: align-briefs
     content: If user provides AIES_CCA/CCP PDFs, map report headings to exact teacher wording; otherwise use TECH_DOC §2/§16
@@ -15,8 +15,8 @@ todos:
     content: "Write VIVA.md: implementation walkthrough + AIES domain questions with short answers from this codebase"
     status: completed
   - id: optional-kappa
-    content: "Only if two humans available: 100-item independent review and real kappa; never fabricate"
-    status: in_progress
+    content: "Only if two humans are available: complete a 100-item independent review and compute real kappa; never fabricate"
+    status: pending
 isProject: false
 ---
 
@@ -85,22 +85,22 @@ From [docs/FINAL_RESULTS.json](docs/FINAL_RESULTS.json) and [docs/DEMO_REPORT.md
 
 ## What will actually lose marks (priority)
 
-1. **No CCP report** — if this is CCP, this is the largest hole. CCA still needs a demo narrative.
+1. **Report rendering/page count** — the CCP report exists in Markdown and DOCX, but final visual rendering and 10+ page verification remain outstanding. CCA also needs a rehearsed demo narrative.
 2. **Unreviewed custom scam data / no Cohen’s kappa** — spec and [docs/DATA_REVIEW.md](docs/DATA_REVIEW.md) require two annotators. Do **not** invent kappa. Either review a 100-item sample tonight or report “preliminary, human-unverified” everywhere.
 3. **URL false positives in a live demo** — examiners paste `https://example.com` or JazzCash-looking HTTPS links. Prepare a scripted URL set; do not whitelist domains in code to hide the bias.
-4. **WhatsApp “real-time monitoring”** — code uses **whatsapp-web.js**, not Baileys (spec said Baileys). Live pairing never done. Simulator is the honest demo unless a **dedicated** number exists tomorrow.
+4. **WhatsApp “real-time monitoring”** — the Baileys bridge is implemented, but live pairing and delivery were not verified. Use the simulator unless a dedicated demo account and recipient agreement are available.
 5. **Expert-system story is thin if you only show ML F1** — hybrid does not beat ML on the frozen test set. You must explain **why rules still belong** (OTP+URL floor, explainability, low-resource scam templates).
 6. **Imbalance / proxy labels** — English SMS spam ≠ Roman Urdu scam; UCI negative sentiment was correctly **not** mapped to abusive.
 7. **Media limits** — OCR missed URLs in PNG/video; speech fixture is English; Urdu ASR is a known limitation.
 
-## Do not spend tomorrow on
+## Do not spend time on
 
 - Retraining text or URL models, consuming test data again, promoting failed `url_robust_*` runs.
 - Building 800 new reviewed scam messages (unrealistic overnight).
 - XLM-R, Telegram, notebooks, login/auth, cloud deploy.
 - Fake kappa or fake WhatsApp “connected” state.
 
-## Tomorrow plan (implementation freeze + academic deliverables)
+## Recommended final verification (implementation freeze + academic deliverables)
 
 ### A. Demo that cannot collapse (1–2 hours)
 
@@ -108,9 +108,9 @@ From [docs/FINAL_RESULTS.json](docs/FINAL_RESULTS.json) and [docs/DEMO_REPORT.md
 - Script 6 viva cases: (1) Roman Urdu OTP+link → high/scam + R05; (2) safety sentence “OTP share na karein” → should **not** fire R05; (3) abuse with masked words; (4) PDF upload; (5) **known-phishing-looking** static URL vs **known-biased** benign URL, explaining the bias; (6) Settings → Simulate WhatsApp (no content in alert).
 - Screenshots into `report/figures/` (Analyze scam/normal, Dashboard, Model Lab, Settings simulator). Blur nothing that is already synthetic; never capture real numbers.
 
-### B. CCP report (half the day) — this is the main new work
+### B. CCP report (rendering and verification)
 
-Create `report/Nigehbaan_AI_CCP_Report.md` (then export to PDF/DOCX). Follow TECH_DOC §16 (10+ pages). **Every table copied from generated JSON/MD**, not invented.
+`report/Nigehbaan_AI_CCP_Report.md` and the generated DOCX already exist. Render the DOCX/PDF locally and confirm the page count against TECH_DOC §16. **Every table must remain copied from generated JSON/MD**, not invented.
 
 | Section | Source of truth |
 |---|---|
@@ -133,7 +133,7 @@ Add a short **`ml/make_figures.py`** only if needed: bar charts and confusion ma
 
 ### D. Viva pack (must exist as a one-pager you can memorize)
 
-`report/VIVA.md`: 25 questions mapped to **course theory**:
+`report/VIVA.md`: rehearse the questions mapped to **course theory**:
 
 - Expert system vs ML vs hybrid; knowledge base vs inference engine; certainty/weights vs probabilities.
 - Why TF-IDF + char n-grams for Roman Urdu spelling.
@@ -145,7 +145,7 @@ Add a short **`ml/make_figures.py`** only if needed: bar charts and confusion ma
 - Why URL 0.996 is leakage/confounding, not magic.
 - Why URLs are never fetched (safety + ethics).
 - Consent, guardian never sees content, hashed JIDs.
-- Baileys spec vs whatsapp-web.js (unofficial client, dedicated number, ToS).
+- Environment-based guardian authorization; off-app informed agreement; no in-chat STOP flow.
 - Whisper Urdu-script → transliteration limitation.
 
 ## Current finish state

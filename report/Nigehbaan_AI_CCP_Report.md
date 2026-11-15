@@ -23,7 +23,7 @@ Mobile messaging in Pakistan is routinely used for banking, government disbursem
 Two delivery channels share one FastAPI backend:
 
 1. A React web application (Analyze, Dashboard, Model Lab, Settings, About).
-2. An optional WhatsApp bridge for a **consenting dedicated demo account**, with guardian alerts that never contain message content. Live pairing was not completed for this submission; the Settings simulator exercises the same alert policy.
+2. An implemented optional WhatsApp bridge for a **dedicated demo account**, with guardian alerts that never contain message content. Live pairing was not completed for this submission; the Settings simulator exercises the backend alert decision without sending messages.
 
 The work is significant for the course because it combines **supervised machine learning**, a **rule-based expert system**, evaluation discipline (baseline, tuning, ensemble, ablations, one-shot test), multimodal extraction, and explicit privacy constraints. It is a university prototype, not a production safety product.
 
@@ -131,7 +131,7 @@ This is **not** a full production Rete engine. It is a transparent rule layer th
 
 ### 3.2 Stack
 
-Python 3.11, FastAPI, scikit-learn, SQLite (high-risk **metadata** only), React 18 + Vite + TypeScript, Node WhatsApp Web client (`whatsapp-web.js`). The original design mentioned Baileys; the implemented bridge uses WhatsApp Web in Chromium. Both are unofficial clients. A dedicated number is mandatory; personal accounts are forbidden.
+Python 3.11, FastAPI, scikit-learn, SQLite (high-risk **metadata** only), React 19 + Vite + TypeScript, Node 22+, and the Baileys WebSocket client. Baileys is unofficial and can violate WhatsApp terms; a dedicated demo account is mandatory, and personal accounts are forbidden. The bridge does not launch Chromium.
 
 ---
 
@@ -345,14 +345,14 @@ API access is centralized in `frontend/src/api.ts` with types generated from Ope
 
 Implemented:
 
-- Dedicated-account bridge (`whatsapp/`, `whatsapp-web.js` + headless Chromium).
-- Authenticated backend events, owner opt-in, guardian confirmation command and `STOP`.
-- Hashing of sender identifiers (`sha256(SALT + jid)`).
+- Dedicated-account bridge (`whatsapp/`, Baileys).
+- Authenticated backend events, owner environment opt-in, and environment-based guardian authorization. The recipient's informed agreement must be obtained outside the app; the app does not verify or store it. No guardian command or `STOP` revocation flow is implemented.
+- Keyed HMAC hashing of sender identifiers with the bridge key; raw sender JIDs are not stored in backend history.
 - Rate limit (three reservations per sender per hour) and 24-hour identical-alert suppression.
 - Alert copy contains **reason categories**, never message bodies.
 - Settings simulator for demos without pairing.
 
-**Not completed for this submission:** pairing a dedicated live account and delivering a real guardian SMS. Examiners should use **Settings → Simulate WhatsApp alert**. Unofficial WhatsApp clients can violate terms of service; only a throwaway demo number is acceptable.
+**Not completed for this submission:** pairing a dedicated live account and delivering a real guardian alert. Examiners should use **Settings → Simulate WhatsApp alert**. Unofficial WhatsApp clients can violate terms of service; only a throwaway demo number is acceptable.
 
 ### 7.3 Demo screenshots
 
@@ -368,7 +368,7 @@ Live screenshots are captured at demonstration time using [DEMO_SCRIPT.md](DEMO_
 
 **Accountability.** The system warns; it does not auto-block. Thresholds live in configuration. Dashboard rows are metadata for later discussion.
 
-**Consent.** WhatsApp analysis is only for an opted-in linked account. Guardians opt in with a short-lived command and may send `STOP`.
+**Consent and authorization.** Only the dedicated account owner's incoming messages are analyzed after `WHATSAPP_OWNER_OPT_IN=true`. The configured guardian is automatically enabled after the account connects. This configuration is not proof of the guardian's agreement; that informed agreement must be obtained outside the app before configuration and any live alert. There is no in-chat guardian confirmation or `STOP` flow. To stop monitoring, disable owner opt-in in both local environment files and stop the backend and bridge.
 
 **Limitations (must be stated in viva).**
 

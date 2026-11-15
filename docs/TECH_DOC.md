@@ -79,8 +79,8 @@ flowchart LR
 | Speech | faster-whisper (model `small`, int8 on CPU) |
 | OCR | EasyOCR (`en`, `ur`); Tesseract as fallback |
 | PDF / video | PyMuPDF; ffmpeg + opencv-python-headless |
-| Frontend | React 18, Vite, TypeScript, Tailwind, React Router, Recharts, TanStack Query, openapi-typescript |
-| WhatsApp | Node 20, `@whiskeysockets/baileys`, axios, pino |
+| Frontend | React 19, Vite, TypeScript, Tailwind, React Router, Recharts, TanStack Query, openapi-typescript |
+| WhatsApp | Node 22+, `@whiskeysockets/baileys` |
 | Tests | pytest, httpx; vitest (minimal) |
 
 ---
@@ -306,9 +306,9 @@ Base path `/api`. Pydantic models in `schemas.py` are the **single source of tru
 | POST | `/analyze/url` `{url}` | analyze one URL |
 | POST | `/analyze/file` (multipart `file`) | auto-detect modality, extract, analyze |
 | GET | `/metrics/models` | returns `metrics.json` for Model Lab |
-| POST | `/whatsapp/event` (header `X-API-Key`) | WhatsApp service forwards an event; returns result + `should_alert`, `alert_user_text`, `alert_guardian_text` |
-| GET | `/alerts?limit=&offset=` | alert history (no message text) |
-| POST / GET | `/consent` | register / read consent state (user, guardian) |
+| POST | `/whatsapp/event` (header `X-API-Key`) | WhatsApp service forwards an event; returns decision, alert text and whether high-risk metadata was saved |
+| GET | `/alerts?limit=&offset=` | high-risk web and WhatsApp result metadata (no message text); WhatsApp alert state indicates dry-run or eligibility, not confirmed delivery |
+| POST / GET | `/consent` | internal bridge authorization/read state for the configured guardian; owner opt-in is also required |
 | POST | `/simulate/whatsapp` | demo fallback: same as event, without WhatsApp |
 
 Errors: consistent JSON `{error: {code, message}}`, proper status codes (400 validation, 413 too large, 415 unsupported type, 422 schema).
@@ -323,21 +323,22 @@ Errors: consistent JSON `{error: {code, message}}`, proper status codes (400 val
 3. Text → `POST /api/whatsapp/event`; media → download buffer, send as multipart.
 4. Backend returns result and alert decision. If `should_alert` (risk ≥ `ALERT_THRESHOLD`, default 0.70), the service sends:
    - **to the protected user:** warning + short reasons;
-   - **to the guardian:** warning + masked sender + risk level + reason categories. **Never the message content.**
+   - **to the guardian:** a generic warning to contact the account owner. **Never the message content or sender identifier.**
 5. Backend stores an alert row (no text).
 
 ### 12.2 Alert policy (`services/alert_policy.py`)
 - Only alert on **high** risk. Per-sender rate limit (e.g., max 3 alerts/hour) and dedupe of identical content hashes.
 - `DRY_RUN=true` logs the alert instead of sending (default in dev).
-- Guardian receives alerts only after **both parties consent** (consent flow below).
+- Keep `DRY_RUN=true` until the account owner has opted in, the recipient has agreed, and thresholds have been reviewed.
 
-### 12.3 Consent (mandatory)
-- Only the **linked account owner's own incoming messages** are analyzed, and only after they opt in (`/consent`).
-- Guardian opts in by replying with a confirmation code sent to them; they can reply `STOP` at any time to unsubscribe.
-- Show a consent screen in the React Settings page. Document this in the report (ethics).
+### 12.3 Owner opt-in and guardian authorization
+- Only the **linked account owner's own incoming direct messages** are analyzed. The owner must explicitly set `WHATSAPP_OWNER_OPT_IN=true`.
+- The operator configures `WHATSAPP_GUARDIAN_JID`. After the dedicated account connects, the bridge enables that recipient automatically. This environment-based authorization does **not** verify or store the guardian's informed agreement; obtain that agreement outside the app before configuration and before live alerts.
+- There is no guardian confirmation command or in-chat `STOP` flow. To stop monitoring, set `WHATSAPP_OWNER_OPT_IN=false` in both local environment files and stop the backend and bridge. Obtain renewed agreement before re-enabling.
+- Settings displays connection and configured-recipient status; it does not collect or verify consent. Keep live delivery disabled until recipient agreement and alert-threshold calibration are complete.
 
 ### 12.4 Storage (SQLite, privacy by design)
-`alerts(id, ts, sender_hash, modality, label, risk_score, risk_level, rule_ids)` and `consent(user_id, guardian_jid, status, ts)`. `sender_hash = sha256(SALT + sender_jid)`. **No message text, no media, no transcripts are stored or logged.**
+The local history stores `ts, modality, label, risk_score, risk_level, rule_ids, source, alert_state`; it does not store a sender identifier. The separate WhatsApp policy database stores keyed HMAC digests for the configured guardian, sender, and deduplication fingerprint, plus enablement and timestamps. **No message text, URL, media, transcript, or raw sender JID is stored or logged.**
 
 ### 12.5 Risks
 - Baileys is **unofficial** and can violate WhatsApp ToS; accounts can be banned. Use a **dedicated demo number**, never a personal/business number.
@@ -347,7 +348,7 @@ Errors: consistent JSON `{error: {code, message}}`, proper status codes (400 val
 
 ## 13. Ethics, Privacy, Fairness
 
-- **Privacy:** no text/media persistence; hashed sender IDs; temp files deleted; secrets in `.env`; consent required.
+- **Privacy:** no text/media persistence; keyed sender identifiers; temp files deleted; secrets in `.env`; owner opt-in and prior recipient agreement are required before live monitoring.
 - **Transparency:** every result has an explanation (fired rules, top terms).
 - **Accountability:** alert history with rule IDs; thresholds documented; a human always makes the final call (the system warns, never blocks or deletes).
 - **Fairness:** evaluate error rates across dialect/spelling variants and across sources; avoid flagging identity terms as abusive (test with neutral sentences that mention religion, ethnicity, gender); document limitations.
@@ -361,9 +362,9 @@ Errors: consistent JSON `{error: {code, message}}`, proper status codes (400 val
 | Page | Contents |
 |---|---|
 | **Analyze** | Tabs: Text / URL / File (drag-drop). Result card: label badge, risk meter (green / amber / red), rule chips, highlighted flagged words, explanation, extracted-text preview with a "hide" toggle, latency |
-| **Dashboard** | Alert history table, risk-level distribution, modality breakdown, timeline (Recharts) |
+| **Dashboard** | High-risk web and WhatsApp history, source/modality breakdown, risk status and timeline (Recharts); message content is never shown or stored |
 | **Model Lab** | Model comparison table and macro-F1 bars (from `/metrics/models`), confusion matrix heatmap, ablation tables |
-| **Settings** | Consent, guardian number, threshold display, dry-run indicator, simulate-WhatsApp button |
+| **Settings** | WhatsApp connection/configuration status, threshold display, dry-run indicator, simulate-WhatsApp button; guardian agreement is obtained outside the app |
 | **About / Ethics** | Short privacy and limitations statement |
 
 UI quality bar: responsive, loading and error states everywhere, accessible contrast, no layout jumps. API access only through `src/api.ts` with generated types.
@@ -539,4 +540,4 @@ See docs/MEDIA.md for processing, limits, setup, privacy and measured extraction
 
 ### M9 local bridge contract
 
-Authenticated GET and POST /api/consent use a keyed guardian digest. POST /api/whatsapp/event accepts text and keyed sender/guardian digests. POST /api/whatsapp/media accepts the same digests and a bounded multipart media upload. Both return Decision: reason, should_alert, dry_run, risk_level, rule_ids, and optional generic alert text. POST /api/simulate/whatsapp runs a built-in example with no persistence or outbound delivery. The local bridge binds analysis to an opted-in dedicated account and accepts a time-limited confirmation only from the configured guardian. STOP revokes consent. See whatsapp/README.md.
+Authenticated GET and POST /api/consent use a keyed guardian digest. POST /api/whatsapp/event accepts text and keyed sender/guardian digests. POST /api/whatsapp/media accepts the same digests and a bounded multipart media upload. Both return Decision: reason, should_alert, dry_run, risk_level, rule_ids, and optional generic alert text. POST /api/simulate/whatsapp runs a built-in example with no persistence or outbound delivery. The local bridge binds analysis to an opted-in dedicated account and enables the guardian configured in its local environment after connection. The app does not verify or store the guardian's informed agreement; that agreement must be obtained outside the app. There is no guardian command or STOP revocation flow. See whatsapp/README.md.

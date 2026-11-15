@@ -113,7 +113,7 @@ export interface paths {
         };
         /**
          * Alerts
-         * @description High-risk web analysis history, not sent WhatsApp notifications.
+         * @description Return high-risk web and WhatsApp metadata without source content.
          */
         get: operations["alerts_api_alerts_get"];
         put?: never;
@@ -305,6 +305,14 @@ export interface components {
             risk_score: number;
             /** Rule Ids */
             rule_ids: string[];
+            /**
+             * Source
+             * @default web
+             * @enum {string}
+             */
+            source: "web" | "whatsapp";
+            /** Alert State */
+            alert_state?: string | null;
         };
         /**
          * AnalyzeResponse
@@ -348,6 +356,11 @@ export interface components {
             sender: string;
             /** File */
             file: string;
+            /**
+             * Caption
+             * @default
+             */
+            caption: string;
         };
         /** ClassMetric */
         ClassMetric: {
@@ -384,6 +397,8 @@ export interface components {
              * @default true
              */
             dry_run: boolean;
+            /** History Recorded */
+            history_recorded?: boolean | null;
             /** Risk Level */
             risk_level?: string | null;
             /** Rule Ids */

@@ -52,7 +52,13 @@ export default function Settings() {
           <section className="panel">
             <h2>WhatsApp &amp; guardian</h2>
             <WhatsAppPairing />
-            <p className="muted">Pair a dedicated account and manage consent in the local bridge. The simulator uses a built-in example and sends zero messages.</p>
+            <p className="muted">
+              Pair a dedicated account. Obtain the recipient’s informed
+              agreement before configuring them; the app does not verify or
+              store that agreement. To stop monitoring, set
+              WHATSAPP_OWNER_OPT_IN=false and stop the backend and bridge. The
+              simulator uses a built-in example and sends zero messages.
+            </p>
             <button type="button" className="secondary" disabled={simulation.isPending} onClick={() => simulation.mutate()}>
               {simulation.isPending ? "Running…" : "Simulate WhatsApp alert"}
             </button>

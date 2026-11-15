@@ -40,6 +40,7 @@
   font-weight: 800;
   font-size: 1.4rem;
   clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
+  animation: soft-pulse 4s ease-in-out infinite;
 }
 .nav-caption {
   font-size: 0.6rem;
@@ -59,6 +60,10 @@ nav a {
   border-radius: 8px;
   font-size: 0.88rem;
   color: #a1b4bf;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
 }
 nav a span {
   font-size: 1.2rem;
@@ -68,6 +73,7 @@ nav a span {
 nav a:hover {
   background: #172b36;
   color: white;
+  transform: translateX(2px);
 }
 nav a.active {
   background: #163c3c;
@@ -92,6 +98,7 @@ nav a.active {
   background: var(--accent);
   border-radius: 50%;
   margin-right: 8px;
+  animation: soft-pulse 2.8s ease-in-out infinite;
 }
 .workspace {
   margin-left: 235px;
@@ -112,6 +119,21 @@ main {
   padding: 44px;
   margin: auto;
   outline: none;
+}
+.page-header {
+  animation: rise-in 420ms ease both;
+}
+.page-header ~ * {
+  animation: rise-in 520ms ease both;
+}
+.page-header ~ *:nth-child(2) {
+  animation-delay: 50ms;
+}
+.page-header ~ *:nth-child(3) {
+  animation-delay: 100ms;
+}
+.page-header ~ *:nth-child(4) {
+  animation-delay: 150ms;
 }
 .page-header {
   display: flex;

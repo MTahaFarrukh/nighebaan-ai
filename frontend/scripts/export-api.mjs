@@ -1,11 +1,15 @@
 import { existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 const local =
-  process.platform === "win32"
-    ? "../backend/.venv/Scripts/python.exe"
-    : "../backend/.venv/bin/python";
+  ["../backend/.venv", "../backend/venv"]
+    .map((environment) =>
+      process.platform === "win32"
+        ? `${environment}/Scripts/python.exe`
+        : `${environment}/bin/python`,
+    )
+    .find(existsSync);
 const result = spawnSync(
-  existsSync(local) ? local : "python",
+  local ?? "python",
   ["../backend/scripts/export_openapi.py"],
   { stdio: "inherit" },
 );

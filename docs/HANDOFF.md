@@ -359,3 +359,21 @@ Guardian consent flow changed per user request to the Brain Hack Habib-style env
 Disabled Baileys optional `fireInitQueries` chat-property initialization because it was producing 408 `init queries` timeouts; live message/media events do not require chat history, blocklist or privacy bootstrap queries. `node --check whatsapp/bridge.mjs` passes.
 WhatsApp bridge now emits privacy-safe `message_analyzed` diagnostics containing only risk level, rule IDs, alert decision, and dry-run state; it never logs message text or phone numbers.
 Baileys inbound sender validation now accepts modern `@lid` JIDs as well as phone JIDs; this fixes third-account messages being discarded before analysis while keeping identifiers hashed.
+
+## Dashboard WhatsApp visibility and UI polish - 2026-11-15
+
+Dashboard now lists high-risk web and WhatsApp outcomes with source, modality, label, risk, rule IDs, and a careful alert state. It refreshes every 10 seconds while visible. Source text and identifiers remain excluded; "eligible" does not claim delivery. Added restrained page/card/control motion and honors `prefers-reduced-motion`. Demo and technical docs now describe the combined history.
+
+The frontend OpenAPI exporter now selects either `backend/.venv` or `backend/venv`, so type generation works with the documented Windows environment. Regenerated `frontend/openapi.json` and `frontend/src/generated/api.ts`.
+
+Verification: backend `177 passed`; frontend `npm run typecheck`, `npm run lint`, `npm run build`, and `npm run gen:types` passed; `node --check whatsapp/bridge.mjs` passed; `git diff --check` passed. `whatsapp`'s `npm test` exits successfully but discovers zero Node test files; backend `test_whatsapp_result_appears_as_metadata_only` covers the synthetic authenticated event-to-history path. Browser Dashboard rendered and showed existing web metadata. No WhatsApp device was paired and no real message/alert was sent; live delivery remains unverified.
+
+Policy decision received 2026-11-15: retain environment-based guardian enablement. TECH_DOC, setup instructions, application copy, and report materials now state that the configured guardian is enabled on connection, while informed agreement must be obtained outside the app; the app does not verify it and there is no `STOP` flow. Human label review, alert-threshold calibration, live WhatsApp pairing/delivery, and final report rendering/visual checks remain outstanding. Do not claim the entire project is submission-ready until these are addressed or explicitly accepted as limitations.
+
+## Final documentation and verification - 2026-11-15
+
+Aligned the README, Windows setup, agent privacy rules, technical spec, project explanation, gap analysis, viva sheet, CCP Markdown report, WhatsApp setup guide, and generated demo report with the current Baileys transport and environment-based guardian policy. Rebuilt `report/Nigehbaan_AI_CCP_Report.docx`; structural check found 211 paragraphs and 14 tables, and confirmed the obsolete `whatsapp-web.js` claim is absent. The DOCX still needs local visual rendering and page-count verification.
+
+Final checks: backend `178 passed`; Ruff passed for the changed Python files; frontend OpenAPI generation, typecheck, lint, and production build passed; `node --check whatsapp/bridge.mjs` passed; `git diff --check` passed. WhatsApp `npm test` passes but finds zero Node test files. WhatsApp decisions now report whether high-risk metadata was saved; failures emit a content-free warning and are covered by a privacy regression test. Browser Dashboard rendered with existing web metadata; there are no live WhatsApp records because no device was paired. No real messages or alerts were sent.
+
+Exact remaining submission work: independently review custom labels and compute genuine kappa if two annotators are available; review URL and realistic Urdu-media behavior; calibrate guardian thresholds; pair/test only with a dedicated account after obtaining recipient agreement; render the final report and verify pages/figures. Do not rerun or tune from the frozen final evaluation.

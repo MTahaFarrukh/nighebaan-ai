@@ -185,7 +185,7 @@
           "dashboard"
         ],
         "summary": "Alerts",
-        "description": "High-risk web analysis history, not sent WhatsApp notifications.",
+        "description": "Return high-risk web and WhatsApp metadata without source content.",
         "operationId": "alerts_api_alerts_get",
         "parameters": [
           {
@@ -697,6 +697,26 @@
             },
             "type": "array",
             "title": "Rule Ids"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "web",
+              "whatsapp"
+            ],
+            "title": "Source",
+            "default": "web"
+          },
+          "alert_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Alert State"
           }
         },
         "type": "object",
@@ -829,6 +849,12 @@
             "type": "string",
             "contentMediaType": "application/octet-stream",
             "title": "File"
+          },
+          "caption": {
+            "type": "string",
+            "maxLength": 12000,
+            "title": "Caption",
+            "default": ""
           }
         },
         "type": "object",
@@ -909,6 +935,17 @@
             "type": "boolean",
             "title": "Dry Run",
             "default": true
+          },
+          "history_recorded": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "History Recorded"
           },
           "risk_level": {
             "anyOf": [

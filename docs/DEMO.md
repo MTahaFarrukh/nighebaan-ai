@@ -8,7 +8,7 @@ CCP write-up: [report/Nigehbaan_AI_CCP_Report.md](../report/Nigehbaan_AI_CCP_Rep
 3. Try safety advice: `Never share your OTP.` It should not fire the credential-request rule.
 4. Upload a generated synthetic PDF/image/audio/video from backend/data/raw/media_demo.
    Show the masked preview and extraction warnings. Pure tone is rejected, not labeled safe.
-5. Open Dashboard: metadata only, no source content. Counts include high-risk synthetic QA runs.
+5. Open Dashboard: high-risk web and WhatsApp results show their source, modality, risk and safe alert status; source content is never saved. Counts include high-risk synthetic QA runs. The simulator demonstrates a synthetic decision in Settings but does not create a WhatsApp history row.
 6. Open Model Lab: text and binary URL results are separate. Show the confusion matrix and
    ablations. Validation scores live here; frozen test numbers are in FINAL_RESULTS.json.
 7. Settings shows the actual backend thresholds. Use Simulate WhatsApp unless a dedicated

@@ -45,6 +45,25 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.stat::after {
+  position: absolute;
+  inset: auto -35px -64px auto;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: #4dd9ba0b;
+  content: "";
+  transition:
+    transform 350ms ease,
+    background-color 350ms ease;
+  pointer-events: none;
+}
+.stat:hover::after {
+  background: #4dd9ba14;
+  transform: scale(1.35);
 }
 .stat span {
   font-size: 0.8rem;
@@ -53,6 +72,7 @@
 .stat strong {
   font-size: 2.4rem;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 .stat small {
   font-size: 0.7rem;
@@ -94,6 +114,12 @@ th:first-child {
 }
 td {
   white-space: nowrap;
+}
+tbody tr {
+  transition: background-color 160ms ease;
+}
+tbody tr:hover {
+  background: #ffffff06;
 }
 .matrix th,
 .matrix td {

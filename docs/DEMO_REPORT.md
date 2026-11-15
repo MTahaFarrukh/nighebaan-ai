@@ -64,7 +64,7 @@ No submitted message, transcript, phone number, media or URL is retained in hist
 
 ## Remaining acceptance work
 
-Human label review, independently reviewed URL cases, realistic Urdu media QA, and guardian-threshold calibration remain pending. WhatsApp consent, delivery and guardian alerts are an optional unimplemented milestone. Desktop and mobile browser checks passed for the exercised pages.
+Human label review, independently reviewed URL cases, realistic Urdu media QA, guardian-threshold calibration, and live WhatsApp pairing/delivery remain unverified. The Baileys bridge and authenticated text/media event path are implemented; the configured guardian is environment-authorized and their informed agreement must be obtained outside the app. Desktop and mobile browser checks passed for the exercised pages.
 
 ## Demo
 

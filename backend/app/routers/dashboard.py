@@ -33,7 +33,7 @@ def model_metrics() -> ModelMetrics:
 def alerts(
     limit: int = Query(20, ge=1, le=100), offset: int = Query(0, ge=0)
 ) -> AlertHistory:
-    """High-risk web analysis history, not sent WhatsApp notifications."""
+    """Return high-risk web and WhatsApp metadata without source content."""
     try:
         return history.history(limit, offset)
     except (OSError, sqlite3.Error):

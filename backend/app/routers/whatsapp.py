@@ -3,6 +3,7 @@
 import hashlib
 import hmac
 import json
+import logging
 import os
 import sqlite3
 from typing import Annotated, Literal
@@ -29,6 +30,7 @@ from app.services.extractors import ExtractionError
 from app.services.media_config import MAX_BYTES
 
 router = APIRouter(tags=["whatsapp"])
+logger = logging.getLogger(__name__)
 Digest = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
 
 
@@ -61,6 +63,7 @@ class Decision(BaseModel):
     reason: str
     should_alert: bool = False
     dry_run: bool = True
+    history_recorded: bool | None = None
     risk_level: str | None = None
     rule_ids: list[str] = Field(default_factory=list)
     alert_user_text: str | None = None
@@ -122,7 +125,9 @@ def decide(
     )
 
 
-def record_whatsapp_result(result: AnalyzeResponse, decision: Decision, modality: str) -> Decision:
+def record_whatsapp_result(
+    result: AnalyzeResponse, decision: Decision, modality: str
+) -> Decision:
     """Expose high-risk bridge outcomes in local history without retaining content."""
     if result.risk_level != "high":
         return decision
@@ -143,9 +148,13 @@ def record_whatsapp_result(result: AnalyzeResponse, decision: Decision, modality
             source="whatsapp",
             alert_state=state,
         )
-    except (OSError, sqlite3.Error, ValueError):
-        pass
-    return decision
+    except (OSError, sqlite3.Error) as error:
+        logger.warning(
+            "WhatsApp result metadata could not be saved (%s).",
+            type(error).__name__,
+        )
+        return decision.model_copy(update={"history_recorded": False})
+    return decision.model_copy(update={"history_recorded": True})
 
 
 def permitted(guardian: str) -> bool:

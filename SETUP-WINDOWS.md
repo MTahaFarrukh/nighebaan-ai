@@ -1,6 +1,6 @@
 # Nigehbaan AI Windows setup
 
-Install Git, Python 3.11 and Node.js 22 or newer. For WhatsApp install Chrome or Edge.
+Install Git, Python 3.11 and Node.js 22 or newer. Baileys does not require Chrome or Edge.
 
 ## 1. Get the code and models
 
@@ -61,22 +61,23 @@ followed by @s.whatsapp.net. Use a dedicated demo account.
 Start the demo backend with the launcher above. In another PowerShell window:
 ```powershell
 cd nighebaan-ai/whatsapp
-$env:PUPPETEER_SKIP_DOWNLOAD = 'true'
 npm.cmd ci
 npm.cmd run dev
 ```
 
-The bridge detects Chrome or Edge in standard Windows locations. If installed
-elsewhere, set WHATSAPP_CHROME_PATH in whatsapp/.env to the browser executable.
 Open http://localhost:5173/#/settings. The QR appears automatically.
 On the demo phone use WhatsApp > Linked Devices > Link a Device and scan it.
-After connection, the guardian sends the opt-in command shown in Settings to the
-demo account from the configured guardian account. STOP revokes consent.
+The configured guardian is enabled automatically after the dedicated demo
+account connects. Obtain and document the guardian's informed agreement before
+adding their JID. The app does not verify that agreement and there is no
+guardian command or `STOP` revocation flow.
 
 With dry-run enabled, test with a synthetic message from a third test account.
-To try live delivery after both parties agree, set DRY_RUN=false in both local
-files and restart both the backend and bridge. Send a different synthetic
-example for the live test because duplicate alerts are suppressed.
+To stop monitoring, set WHATSAPP_OWNER_OPT_IN=false in both local files and
+stop the backend and bridge. Before any real delivery test, confirm both
+parties' agreement, calibrate the alert threshold, then set DRY_RUN=false in
+both local files and restart both services. Send a different synthetic example
+because duplicate alerts are suppressed.
 Check Message Yourself and the guardian chat for a high-risk warning. A normal
 message should produce no warning. Live delivery still needs an end-to-end check
 with the recipient's linked accounts. The Settings simulator works without pairing.

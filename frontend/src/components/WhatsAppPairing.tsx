@@ -22,7 +22,14 @@ export function WhatsAppPairing() {
       {state?.status === "connected" && (
         <>
           <p>{state.dry_run ? "Dry-run is on." : "Live alerts are enabled."}</p>
-          <p>Guardian consent: {state.guardian_enabled == null ? "unavailable" : state.guardian_enabled ? "active" : "waiting"}</p>
+          <p>
+            Configured guardian:{" "}
+            {state.guardian_enabled == null
+              ? "unavailable"
+              : state.guardian_enabled
+                ? "active"
+                : "inactive"}
+          </p>
           {state.guardian_command && <p>Have the guardian send this command to the demo account: <code>{state.guardian_command}</code></p>}
         </>
       )}

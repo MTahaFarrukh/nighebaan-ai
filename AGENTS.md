@@ -9,8 +9,8 @@ This is a university project (CT-361 AI & Expert Systems): correctness, explaina
 
 ## Stack
 - Backend: Python 3.11, FastAPI, Pydantic v2, SQLAlchemy + SQLite, scikit-learn
-- Frontend: React 18 + Vite + TypeScript + Tailwind + Recharts + TanStack Query
-- WhatsApp service: Node 20 + `@whiskeysockets/baileys`
+- Frontend: React 19 + Vite + TypeScript + Tailwind + Recharts + TanStack Query
+- WhatsApp service: Node 22+ + `@whiskeysockets/baileys`
 
 ## Commands
 ```bash
@@ -45,9 +45,9 @@ cd whatsapp && npm install && npm run dev
 
 ### Privacy (non-negotiable)
 1. **Never store, log, print or commit message text, transcripts, media, phone numbers or CNICs.** This includes debug prints, test fixtures with real data, and exception messages. Log IDs, hashes, rule IDs, scores only.
-2. Sender identifiers are stored only as `sha256(SALT + jid)`.
+2. Sender identifiers are stored only as keyed HMAC-SHA256 digests; raw JIDs must never be persisted.
 3. Temp files from uploads are deleted in a `finally` block.
-4. WhatsApp analysis only for consenting accounts. Guardian alerts never include message content.
+4. WhatsApp analysis only for an opted-in account owner. Obtain the configured guardian's informed agreement outside the app before enabling alerts; environment configuration alone does not prove consent. Guardian alerts never include message content.
 5. Never put secrets, tokens, or WhatsApp auth state in git. Update `.gitignore` if you add a new secret path.
 6. Do not print or hard-code the abusive lexicon in logs/UI; mask flagged words (e.g. `g***`).
 

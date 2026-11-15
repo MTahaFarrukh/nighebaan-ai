@@ -131,6 +131,7 @@ async function handleMessage(message) {
     rule_ids: decision.rule_ids,
     should_alert: decision.should_alert,
     dry_run: decision.dry_run,
+    history_recorded: decision.history_recorded,
   }));
   if (!decision.should_alert || !["medium", "high"].includes(decision.risk_level)) return;
   if (decision.dry_run || env.DRY_RUN !== "false") {

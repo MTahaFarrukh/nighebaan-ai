@@ -11,23 +11,50 @@ import {
 } from "recharts";
 import { getAlerts } from "../api";
 import { Empty, ErrorNotice, Loading, PageHeader } from "../components/ui";
+
+function alertStateLabel(state: string | null | undefined) {
+  switch (state) {
+    case "dry_run":
+      return "Dry run · not sent";
+    case "reserved":
+      return "Eligible · delivery unconfirmed";
+    case "duplicate":
+      return "Duplicate";
+    case "rate_limited":
+      return "Rate limited";
+    case "below_threshold":
+      return "Not eligible";
+    default:
+      return "No alert";
+  }
+}
+
 export default function Dashboard() {
   const [offset, setOffset] = useState(0);
   const query = useQuery({
     queryKey: ["alerts", offset],
     queryFn: ({ signal }) => getAlerts(offset, signal),
+    refetchInterval: 10000,
+    refetchIntervalInBackground: false,
   });
   const data = query.data;
   const days = Object.entries(data?.by_day ?? {}).map(([day, count]) => ({
     day,
     count,
   }));
+  const whatsappCount =
+    data?.items.filter((row) => row.source === "whatsapp").length ?? 0;
+  const webCount = (data?.items.length ?? 0) - whatsappCount;
+  const dryRunCount =
+    data?.items.filter(
+      (row) => row.source === "whatsapp" && row.alert_state === "dry_run",
+    ).length ?? 0;
   return (
     <>
       <PageHeader
         eyebrow="LOCAL ACTIVITY"
-        title="Your risk overview."
-        description="High-risk web analyses only. These records are not sent notifications."
+        title="A clearer view of risk."
+        description="High-risk results from the web app and consenting WhatsApp demo account. Privacy-safe metadata refreshes every 10 seconds."
         action={
           <button
             className="secondary"
@@ -55,31 +82,27 @@ export default function Dashboard() {
                 <small>Across local history</small>
               </div>
               <div className="panel stat">
-                <span>Message analyses</span>
-                <strong>{data.by_modality.text ?? 0}</strong>
-                <small>High risk only</small>
+                <span>WhatsApp results</span>
+                <strong>{whatsappCount}</strong>
+                <small>On this page · all modalities</small>
               </div>
               <div className="panel stat">
-                <span>URL analyses</span>
-                <strong>{data.by_modality.url ?? 0}</strong>
-                <small>High risk only</small>
+                <span>Web app results</span>
+                <strong>{webCount}</strong>
+                <small>On this page · all modalities</small>
               </div>
               <div className="panel stat">
-                <span>Media analyses</span>
-                <strong>
-                  {["image", "pdf", "audio", "video"].reduce(
-                    (sum, kind) => sum + (data.by_modality[kind] ?? 0),
-                    0,
-                  )}
-                </strong>
-                <small>High risk only</small>
+                <span>Dry-run alerts</span>
+                <strong>{dryRunCount}</strong>
+                <small>Not delivered · on this page</small>
               </div>
             </div>
             {!data.total ? (
               <section className="panel mt">
                 <Empty title="No high-risk results yet.">
-                  Analyze a message or URL to get started. Only results marked
-                  high risk appear here; content is never saved.
+                  Analyze a message or URL, or connect the consenting WhatsApp
+                  demo account. Only high-risk metadata appears here; message
+                  content is never saved.
                 </Empty>
               </section>
             ) : (
@@ -87,7 +110,8 @@ export default function Dashboard() {
                 <section className="panel mt">
                   <h2>Activity over time</h2>
                   <p className="muted small">
-                    Daily high-risk result count · UTC dates
+                    Daily high-risk result count from web and WhatsApp · UTC
+                    dates
                   </p>
                   <div className="chart">
                     <ResponsiveContainer width="100%" height="100%">
@@ -128,16 +152,25 @@ export default function Dashboard() {
                       <thead>
                         <tr>
                           <th>Time</th>
-                          <th>Input</th>
+                          <th>Source</th>
+                          <th>Type</th>
                           <th>Prediction</th>
                           <th>Risk</th>
                           <th>Rules</th>
+                          <th>Alert status</th>
                         </tr>
                       </thead>
                       <tbody>
                         {data.items.map((row) => (
                           <tr key={row.id}>
                             <td>{new Date(row.ts).toLocaleString()}</td>
+                            <td>
+                              <span
+                                className={`badge ${row.source === "whatsapp" ? "whatsapp" : "neutral"}`}
+                              >
+                                {row.source === "whatsapp" ? "WhatsApp" : "Web app"}
+                              </span>
+                            </td>
                             <td className="capitalize">{row.modality}</td>
                             <td className="capitalize">{row.label}</td>
                             <td>
@@ -146,6 +179,15 @@ export default function Dashboard() {
                               </span>
                             </td>
                             <td>{row.rule_ids.join(", ") || "None"}</td>
+                            <td>
+                              <span
+                                className={`badge ${row.alert_state === "dry_run" ? "medium" : row.source === "whatsapp" ? "neutral" : "low"}`}
+                              >
+                                {row.source === "whatsapp"
+                                  ? alertStateLabel(row.alert_state)
+                                  : "Web result"}
+                              </span>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -175,8 +217,9 @@ export default function Dashboard() {
               </>
             )}
             <p className="privacy-note">
-              Low and medium results are not retained. Counts do not represent
-              all analyses or model accuracy.
+              Source and dry-run counts cover the current page; the chart and
+              total cover all saved high-risk results. Low and medium results
+              are not retained, and alert eligibility does not confirm delivery.
             </p>
           </>
         )

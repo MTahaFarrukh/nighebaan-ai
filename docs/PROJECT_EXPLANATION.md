@@ -110,9 +110,9 @@ Recharts displays model comparisons, confusion matrices, and dashboard trends so
 
 These libraries support PDF text extraction, OCR, speech-to-text, image handling, and audio/video conversion. They are loaded only when the relevant media modality is used.
 
-### Node.js and whatsapp-web.js
+### Node.js and Baileys
 
-The WhatsApp bridge runs as a separate Node service. The implemented transport uses WhatsApp Web through a dedicated account. It is kept separate from the Python backend so the detection engine remains reusable by the web app and simulator. A real account must be dedicated and consent-based.
+The WhatsApp bridge runs as a separate Node service using the unofficial Baileys WebSocket client. It is kept separate from the Python backend so the detection engine remains reusable by the web app and simulator. A real account must be dedicated, the owner must opt in, and the configured guardian must agree before live alerts are enabled. Pairing and real delivery have not been verified for this submission.
 
 ## 6. Repository structure
 
@@ -303,11 +303,11 @@ Every data view handles loading, error, and empty states. Browser input is kept 
 
 ## 15. WhatsApp integration
 
-The bridge receives events from a consenting dedicated account and forwards them to the backend. The backend checks owner opt-in, guardian confirmation, deduplication, and rate limits. Sender identifiers are hashed with a salt.
+The bridge receives events from an owner-opted-in dedicated account and forwards them to the backend. The backend checks owner opt-in, environment-based guardian authorization, deduplication, and rate limits. The recipient's informed agreement must be obtained outside the app; the application does not verify or record it. Sender identifiers are HMAC-hashed with the bridge key.
 
-Alerts contain only generic reason categories and a masked sender identifier. Guardian alerts never include message content. The Settings simulator exercises the same backend alert policy without sending real messages.
+Owner alerts may include safe reason categories. Guardian alerts are generic and include neither message content nor a sender identifier. The Settings simulator exercises the backend alert decision without sending real messages.
 
-For this submission, live pairing and real guardian delivery are not claimed. A dedicated throwaway account and explicit guardian consent would be required for live testing.
+For this submission, live pairing and real guardian delivery are not claimed. Use a dedicated throwaway account, obtain explicit agreement from both the owner and guardian, and keep `DRY_RUN` enabled until thresholds are reviewed.
 
 ## 16. Privacy and safety
 

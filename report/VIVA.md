@@ -6,7 +6,7 @@ Memorize the short answers. Numbers are from generated files; if you forget a di
 
 We detect `normal` / `abusive` / `scam` in Roman Urdu and code-mixed English. Text, URL, or file goes to FastAPI. Files become text via Whisper, OCR, or PDF extractors. Preprocessing normalizes spelling and masks phones, URLs, amounts. A voting ensemble of logistic regression and a calibrated SVM gives class probabilities. YAML rules R01–R11 fire as an expert knowledge base. A static URL model scores links without visiting them. The risk engine fuses `1-P(normal)`, rule scores, and URL probability, with an 0.85 floor for OTP-plus-link. The React app shows the result. WhatsApp is a thin client with consent; we demo the simulator because we did not pair a live dedicated account.
 
-**Do not say:** Baileys is what we shipped (we shipped `whatsapp-web.js`). **Do not say:** hybrid is more accurate on the frozen test set (ML macro-F1 0.9216 vs hybrid 0.9140).
+**Do say:** the transport is implemented with Baileys, but a live account was not paired or delivery verified. **Do not say:** hybrid is more accurate on the frozen test set (ML macro-F1 0.9216 vs hybrid 0.9140).
 
 ---
 
@@ -74,11 +74,11 @@ High-risk metadata: id, timestamp, modality, label, risk, rule IDs, hashed sende
 
 ### 16. Consent and guardian alerts
 
-Owner opt-in. Guardian replies with a short-lived command; `STOP` revokes. Guardian message has masked sender and reason categories, never the body. Rate limit 3/hour/sender; 24h identical-hash suppression.
+The owner opts in through `WHATSAPP_OWNER_OPT_IN`; the configured guardian is enabled from environment settings when the dedicated account connects. Obtain and document the guardian's informed agreement outside the app—the app does not verify it. There is no guardian command or `STOP` flow; disable owner opt-in and stop both services to stop monitoring. Guardian alerts are generic and contain neither message content nor sender ID. Rate limit: 3 reservations/hour per sender; identical payloads are suppressed for 24 hours.
 
-### 17. Baileys vs whatsapp-web.js
+### 17. Which WhatsApp transport shipped?
 
-Spec mentioned Baileys. Implementation uses WhatsApp Web in Chromium. Both unofficial; ban risk; dedicated number only. Official path would be Cloud API (out of scope).
+The bridge uses Baileys over WhatsApp Web's unofficial protocol; it does not launch Chromium. The bridge is implemented, but live pairing and delivery were not verified. Accounts can be banned, so use a dedicated demo account only. The official path would be Cloud API (out of scope).
 
 ### 18. Whisper Urdu limitation
 
