@@ -1,5 +1,8 @@
 # Five-minute local demo
 
+Viva order, expected cues, and examiner traps: [report/DEMO_SCRIPT.md](../report/DEMO_SCRIPT.md).
+CCP write-up: [report/Nigehbaan_AI_CCP_Report.md](../report/Nigehbaan_AI_CCP_Report.md).
+
 1. Run `powershell -File scripts/start-demo.ps1` from the repo root; open the printed preview.
 2. Analyze the synthetic OTP+link example. Review risk, matched rules and the explanation.
 3. Try safety advice: `Never share your OTP.` It should not fire the credential-request rule.
@@ -7,8 +10,9 @@
    Show the masked preview and extraction warnings. Pure tone is rejected, not labeled safe.
 5. Open Dashboard: metadata only, no source content. Counts include high-risk synthetic QA runs.
 6. Open Model Lab: text and binary URL results are separate. Show the confusion matrix and
-   ablations. State clearly that these are validation scores, not final test numbers.
-7. Settings shows the actual backend thresholds. WhatsApp is not connected; no messages are sent.
+   ablations. Validation scores live here; frozen test numbers are in FINAL_RESULTS.json.
+7. Settings shows the actual backend thresholds. Use Simulate WhatsApp unless a dedicated
+   account is already paired. Do not present `https://example.com` as correctly detected phishing.
 
 ## Claims to avoid
 

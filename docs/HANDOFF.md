@@ -313,3 +313,49 @@ Settings now includes authenticated WhatsApp QR and connection status. Start the
 WhatsApp transport now launches headless Chromium with whatsapp-web.js. Settings displays its QR via the authenticated loopback endpoint. No Meta API key. Dedicated-account QR scan and guardian consent still require real devices.
 
 Settings pairing now uses the local FastAPI proxy; bridge key stays server-side. Connected Settings displays guardian consent and an expiring command. High-risk delivery uses the linked account self-chat and the configured guardian. Local dry-run disabled at user request; owner and guardian consent still gate delivery. Live verification requires an active linked session and guardian opt-in.
+
+## CCP report pack — 2026-11-15
+Academic wrapper added without retraining or test reuse. Original AIES_CCA/AIES_CCP PDFs were not in the repo; headings follow TECH_DOC §2/§16 (`report/CCA_CCP_MAPPING.md`).
+Cohen's kappa is not reported (`report/KAPPA_STATUS.md`); do not fabricate it.
+Figures: from backend, `.venv/Scripts/python.exe -m ml.make_figures` writes `report/figures/*.svg` from published JSON.
+Report: `report/Nigehbaan_AI_CCP_Report.md`. Viva: `report/VIVA.md`. Demo order: `report/DEMO_SCRIPT.md`.
+Do not claim hybrid beats ML on the frozen test set, URL 0.996 as live accuracy, or live WhatsApp delivery.
+
+## Final verification continuation - 2026-11-15
+
+Core dependencies were restored in `backend/venv` and `frontend/node_modules`. Backend verification now passes 176 tests; only the existing pytest cache permission warning remains. Frontend `npm run typecheck`, `npm run lint`, and `npm run build` all pass. `backend/ml/make_figures.py` generated eight SVG figures under `report/figures/` from published artifacts without retraining. PDF export was attempted through Pandoc and Edge headless, but Edge could not write the PDF in the sandbox; complete PDF/DOCX rendering locally before submission. The report Markdown remains the source document. Gap analysis was updated to reflect the current report, figures, teacher PDFs, demo script, and viva sheet. Do not rerun final evaluation or tune from `docs/FINAL_RESULTS.json`.
+
+## Documentation deliverables - 2026-11-15
+
+Added the beginner-friendly project walkthrough in `docs/PROJECT_EXPLANATION.md`.
+Generated `report/Nigehbaan_AI_CCP_Report.docx` from the maintained CCP Markdown report.
+DOCX structural verification passed: 211 paragraphs, 14 tables, 37 headings, and 8 embedded evaluation figures.
+Full raster rendering was attempted with the prescribed document renderer but is unavailable on this machine because LibreOffice/Word is not installed. The DOCX remains a valid Office Open XML document.
+Reproducible generator: `scripts/create_report_docx.py`.
+
+## WhatsApp Baileys migration - 2026-11-15
+
+Replaced the WhatsApp Web/Chromium transport with `@whiskeysockets/baileys` while preserving the FastAPI event/media contract, HMAC sender hashing, consent and STOP flow, guardian command, dry-run behavior, rate/deduplication policy, QR pairing endpoint, and content-free alert logging. Authentication state is now stored under the ignored `whatsapp/auth_baileys/` directory. Updated `whatsapp/README.md`, `package.json`, and `package-lock.json`.
+Validation: `node --check whatsapp/bridge.mjs` passed and the WhatsApp package test command completed with zero test failures (there are currently no automated WhatsApp test files). A no-account startup smoke test reached Baileys connection handling; outbound network access was blocked by the sandbox, so no real account was paired and no message was sent. Live pairing and delivery remain to be verified with the dedicated consenting account.
+
+## WhatsApp behavior parity - 2026-11-15
+
+Ported the previous Brain Hack Habib behavior into the current transport boundary: direct-message filtering, fresh-message checks, image/audio/video/document routing, media captions, medium/high-risk alert routing, and owner self-alert keyword categories. The owner alert now includes safe categories such as `OTP/password/verification code`; the guardian alert remains generic and excludes message content and URLs. Backend regression suite: 176 passed. Baileys syntax check and package test command passed. Live pairing, real media download, and real alert delivery still require the dedicated consenting account and network access.
+
+## WhatsApp settings environment loading - 2026-11-15
+
+Fixed backend configuration loading so `backend/app/config.py` resolves `backend/.env` from its own location instead of depending on the terminal's current working directory. This prevents the Settings pairing proxy from incorrectly reporting `setup required` when the backend is launched from another directory. Focused WhatsApp regression test: 1 passed. Restart the backend process to load the fix; do not restart the connected Baileys bridge unless needed.
+
+The Baileys guardian command matcher now normalizes Unicode, case and copied whitespace before constant-time comparison. It remains restricted to the configured guardian sender and the 15-minute command window. `node --check whatsapp/bridge.mjs` passed after the change. Restart the bridge before retrying the current command.
+
+Added content-free bridge diagnostics for guardian control messages: the terminal reports whether a configured-guardian control message was received, whether it matched, or whether an incoming message was ignored pending consent. No phone number or message text is logged. `node --check whatsapp/bridge.mjs` passes.
+
+Changed bridge shutdown to close the Baileys WebSocket without calling `logout()`, so restarting the local service no longer unlinks the paired account. `node --check whatsapp/bridge.mjs` passes.
+
+Baileys initialization now attempts the latest supported Web version and uses longer connection/query timeouts with a retry delay. This addresses the observed 408 `init queries` timeout on slower connections while retaining the fallback version behavior. `node --check whatsapp/bridge.mjs` passes.
+
+Guardian consent flow changed per user request to the Brain Hack Habib-style env configuration: `WHATSAPP_GUARDIAN_JID` is automatically enabled after the paired demo account connects, with no guardian command message. Guardian-originated messages are ignored as control input; the configured guardian remains the alert recipient. `node --check` and the focused backend WhatsApp test pass. Restart the bridge and backend after pulling this change.
+
+Disabled Baileys optional `fireInitQueries` chat-property initialization because it was producing 408 `init queries` timeouts; live message/media events do not require chat history, blocklist or privacy bootstrap queries. `node --check whatsapp/bridge.mjs` passes.
+WhatsApp bridge now emits privacy-safe `message_analyzed` diagnostics containing only risk level, rule IDs, alert decision, and dry-run state; it never logs message text or phone numbers.
+Baileys inbound sender validation now accepts modern `@lid` JIDs as well as phone JIDs; this fixes third-account messages being discarded before analysis while keeping identifiers hashed.

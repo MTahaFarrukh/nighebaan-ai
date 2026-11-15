@@ -47,6 +47,8 @@ def test_metadata_only_and_pagination():
         "risk_level",
         "risk_score",
         "rule_ids",
+        "source",
+        "alert_state",
     }
 
 
@@ -60,6 +62,26 @@ def test_analysis_records_no_input(fake_text_model):
     assert saved.json()["total"] == 1
     assert "private-sentinel" not in saved.text and "example.com" not in saved.text
     assert b"private-sentinel" not in history.DB_PATH.read_bytes()
+
+
+def test_whatsapp_result_appears_as_metadata_only(
+    tmp_path, monkeypatch, fake_text_model
+):
+    from app.services import alert_policy
+
+    monkeypatch.setattr(alert_policy, "DB", tmp_path / "whatsapp.sqlite3")
+    monkeypatch.setenv("WHATSAPP_API_KEY", "x" * 32)
+    monkeypatch.setenv("WHATSAPP_OWNER_OPT_IN", "true")
+    monkeypatch.setenv("DRY_RUN", "false")
+    headers = {"X-API-Key": "x" * 32}
+    body = {"guardian": "a" * 64, "sender": "b" * 64, "text": "OTP bhejo https://example.com"}
+    assert client.post("/api/consent", json={"guardian": body["guardian"], "enabled": True}, headers=headers).status_code == 200
+    result = client.post("/api/whatsapp/event", json=body, headers=headers)
+    assert result.status_code == 200 and result.json()["should_alert"]
+    item = client.get("/api/alerts").json()["items"][0]
+    assert item["source"] == "whatsapp"
+    assert item["alert_state"] == "reserved"
+    assert "OTP" not in client.get("/api/alerts").text
 
 
 def test_history_write_failure_does_not_hide_analysis(fake_text_model, monkeypatch):

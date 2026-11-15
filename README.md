@@ -73,4 +73,5 @@ npm run build
 API schema: http://localhost:8000/docs. Source contracts: backend/app/schemas.py and
 backend/app/dashboard_schemas.py. Frontend API types are generated, not hand-maintained.
 
-Demo steps and honest limitations: docs/DEMO.md. Exact continuation: docs/HANDOFF.md.
+Demo steps and honest limitations: docs/DEMO.md. Viva six-case script: report/DEMO_SCRIPT.md.
+CCP report: report/Nigehbaan_AI_CCP_Report.md. Exact continuation: docs/HANDOFF.md.

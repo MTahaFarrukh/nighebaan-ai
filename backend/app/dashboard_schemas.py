@@ -1,5 +1,7 @@
 """Typed public dashboard contracts; no source text or identifiers."""
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 from app.schemas import Label, RiskLevel
@@ -42,6 +44,8 @@ class AlertRow(BaseModel):
     risk_level: RiskLevel
     risk_score: float
     rule_ids: list[str]
+    source: Literal["web", "whatsapp"] = "web"
+    alert_state: str | None = None
 
 
 class AlertHistory(BaseModel):

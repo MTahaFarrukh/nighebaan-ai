@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $backendRoot = Join-Path $repoRoot 'backend'
 $frontendRoot = Join-Path $repoRoot 'frontend'
-$python = Join-Path $backendRoot '.venv/Scripts/python.exe'
+$python = Join-Path $backendRoot 'venv/Scripts/python.exe'
 if (-not (Test-Path -LiteralPath $python)) { throw 'Backend environment missing. Read README setup instructions.' }
 if (-not (Test-Path -LiteralPath (Join-Path $frontendRoot 'node_modules/vite/bin/vite.js'))) { throw 'Run npm ci in frontend first.' }
 function Is-Ready([string]$url, [string]$expected) {

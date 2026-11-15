@@ -2,6 +2,7 @@
 
 from app.main import app
 from app.services import alert_policy
+from app.services import history
 from fastapi.testclient import TestClient
 
 
@@ -30,6 +31,12 @@ def test_bridge_policy(tmp_path, monkeypatch, fake_text_model):
     ).json()["enabled"]
     result = event()
     assert result["should_alert"] and result["dry_run"]
+    dashboard = client.get("/api/alerts").json()
+    assert dashboard["items"][0]["source"] == "whatsapp"
+    assert dashboard["items"][0]["alert_state"] == "dry_run"
+    assert "Detected keyword(s):" in result["alert_user_text"]
+    assert "OTP/password/verification code" in result["alert_user_text"]
+    assert "example.com" not in result["alert_guardian_text"]
     assert "example.com" not in str(result)
     assert event()["reason"] == "duplicate"
     for suffix in (" first", " second"):
@@ -44,4 +51,5 @@ def test_bridge_policy(tmp_path, monkeypatch, fake_text_model):
     )
     assert event()["reason"] == "consent_required"
     assert b"example.com" not in alert_policy.DB.read_bytes()
+    assert b"example.com" not in history.DB_PATH.read_bytes()
     assert client.post("/api/simulate/whatsapp").json()["dry_run"]

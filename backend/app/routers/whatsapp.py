@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import json
 import os
+import sqlite3
 from typing import Annotated, Literal
 from urllib.request import Request as LocalRequest
 from urllib.request import urlopen
@@ -23,7 +24,7 @@ from pydantic import BaseModel, Field
 from starlette.concurrency import run_in_threadpool
 
 from app.schemas import AnalyzeResponse
-from app.services import alert_policy, media, media_text, text_analysis
+from app.services import alert_policy, history, media, media_text, text_analysis
 from app.services.extractors import ExtractionError
 from app.services.media_config import MAX_BYTES
 
@@ -66,6 +67,27 @@ class Decision(BaseModel):
     alert_guardian_text: str | None = None
 
 
+RULE_KEYWORDS = {
+    "R01": "link",
+    "R02": "suspicious URL",
+    "R03": "urgency",
+    "R04": "prize/lottery",
+    "R05": "OTP/password/verification code",
+    "R06": "payment transfer",
+    "R07": "institutional identity",
+    "R08": "account closure threat",
+    "R09": "unrealistic earnings",
+    "R10": "number-change emergency",
+    "R11": "abusive-language cue",
+}
+
+
+def alert_keywords(result: AnalyzeResponse) -> list[str]:
+    """Return safe keyword categories for the owner's self-alert only."""
+    keywords = [RULE_KEYWORDS[rule] for rule in result.rule_flags if rule in RULE_KEYWORDS]
+    return list(dict.fromkeys(keywords))[:4]
+
+
 def decide(
     result: AnalyzeResponse,
     guardian: str | None = None,
@@ -73,7 +95,7 @@ def decide(
     digest: str = "",
 ) -> Decision:
     reason = "below_threshold"
-    if result.risk_level == "high":
+    if result.risk_level in {"medium", "high"}:
         reason = (
             alert_policy.reserve(guardian, sender, digest) if guardian else "eligible"
         )
@@ -82,19 +104,48 @@ def decide(
         rule for rule in result.rule_flags if rule in {f"R{i:02}" for i in range(1, 12)}
     ]
     reasons = ", ".join(ids) or "model risk"
+    keywords = alert_keywords(result)
+    keyword_text = ", ".join(keywords) or "model risk"
+    risk_headline = "High risk" if result.risk_level == "high" else "Caution"
     return Decision(
         reason=reason,
         should_alert=eligible,
         dry_run=guardian is None or alert_policy.dry_run(),
         risk_level=result.risk_level,
         rule_ids=ids,
-        alert_user_text=f"Nigehbaan: High risk ({reasons}). Verify the request before sharing credentials or sending money."
+        alert_user_text=f"Nigehbaan: {risk_headline} ({reasons}). Detected keyword(s): {keyword_text}. Verify the request before sharing credentials or sending money."
         if eligible
         else None,
-        alert_guardian_text=f"Nigehbaan: Your protected demo account received a high-risk message ({reasons})."
+        alert_guardian_text=f"Nigehbaan: Your protected demo account received a {risk_headline.lower()} message. Please contact the account owner directly."
         if eligible
         else None,
     )
+
+
+def record_whatsapp_result(result: AnalyzeResponse, decision: Decision, modality: str) -> Decision:
+    """Expose high-risk bridge outcomes in local history without retaining content."""
+    if result.risk_level != "high":
+        return decision
+    state = (
+        "dry_run"
+        if decision.should_alert and decision.dry_run
+        else "reserved"
+        if decision.should_alert
+        else decision.reason
+    )
+    try:
+        history.record(
+            modality=modality,
+            label=result.label,
+            risk_level=result.risk_level,
+            risk_score=result.risk_score,
+            rule_ids=result.rule_flags,
+            source="whatsapp",
+            alert_state=state,
+        )
+    except (OSError, sqlite3.Error, ValueError):
+        pass
+    return decision
 
 
 def permitted(guardian: str) -> bool:
@@ -125,11 +176,16 @@ def set_consent(body: ConsentRequest) -> ConsentStatus:
 def event(body: Event) -> Decision:
     if not permitted(body.guardian):
         return Decision(reason="consent_required")
-    return decide(
-        text_analysis.analyze(body.text),
-        body.guardian,
-        body.sender,
-        fingerprint(body.text.encode()),
+    result = text_analysis.analyze(body.text)
+    return record_whatsapp_result(
+        result,
+        decide(
+            result,
+            body.guardian,
+            body.sender,
+            fingerprint(body.text.encode()),
+        ),
+        "text",
     )
 
 
@@ -147,6 +203,7 @@ async def media_event(
     guardian: Annotated[Digest, Form()],
     sender: Annotated[Digest, Form()],
     file: Annotated[UploadFile, File()],
+    caption: Annotated[str, Form(max_length=12000)] = "",
 ) -> Decision:
     try:
         if not await run_in_threadpool(permitted, guardian):
@@ -155,9 +212,14 @@ async def media_event(
         if len(data) > MAX_BYTES:
             raise HTTPException(413, "Media exceeds upload limit.")
         result = await run_in_threadpool(analyze_media, data, file.content_type)
-        return await run_in_threadpool(
+        if caption.strip():
+            caption_result = await run_in_threadpool(text_analysis.analyze, caption)
+            if caption_result.risk_score > result.risk_score:
+                result = caption_result
+        decision = await run_in_threadpool(
             decide, result, guardian, sender, fingerprint(data)
         )
+        return await run_in_threadpool(record_whatsapp_result, result, decision, "media")
     finally:
         await file.close()
 
