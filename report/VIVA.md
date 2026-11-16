@@ -8,6 +8,14 @@ We detect `normal` / `abusive` / `scam` in Roman Urdu and code-mixed English. Te
 
 **Do say:** the transport is implemented with Baileys, but a live account was not paired or delivery verified. **Do not say:** hybrid is more accurate on the frozen test set (ML macro-F1 0.9216 vs hybrid 0.9140).
 
+## A2. Project-based viva sequence: screen, stack, then files
+
+1. **Show the running app first.** If a hosted deployment is currently reachable and verified, demonstrate it. Otherwise start `scripts/start-demo.ps1` and call it the local demo; do not claim cloud deployment.
+2. **Walk through one synthetic example** on Analyze and explain the result: label, risk, rule IDs, and limitations. Do not show personal chats or click example URLs.
+3. **Explain the technologies and how they work together:** React/TypeScript renders the UI; `frontend/src/api.ts` sends requests; FastAPI validates them; Python preprocessing, ML, rules, and the risk engine produce the result; extractors turn supported files into text.
+4. **Open the implementation files** in the order listed in section C, starting at the Analyze page and ending with the relevant backend service. Show preprocessing when asked how Roman Urdu spelling is handled.
+5. **Close with evaluation and limitations:** use `docs/FINAL_RESULTS.json`; be clear that WhatsApp live delivery is unverified and the current prototype is not production-ready.
+
 ---
 
 ## B. Course / domain questions
@@ -46,7 +54,7 @@ Train: 16,833 normal / 3,252 abusive / 454 scam. `class_weight="balanced"`. Macr
 
 ### 9. Precision vs recall for scams
 
-Recall: of true scams, how many we catch (test ML 85/97 = 0.876). Precision: of predicted scams, how many are scams (0.955 ML test). Guardian alerts need high precision too; we only alert on **high** risk, but thresholds are not utility-calibrated.
+Recall: of true scams, how many we catch (test ML 85/97 = 0.876). Precision: of predicted scams, how many are scams (0.955 ML test). Guardian alerts need high precision too; the alert policy allows **medium or high** risk, but thresholds are not utility-calibrated.
 
 ### 10. Why is Naive Bayes at 0.39 macro-F1?
 
@@ -70,11 +78,11 @@ Safety (malware, tracking), ethics (do not “check” a victim’s link by visi
 
 ### 15. What is in SQLite?
 
-High-risk metadata: id, timestamp, modality, label, risk, rule IDs, hashed sender if WhatsApp. **No text.**
+High-risk or alert-eligible metadata: id, timestamp, modality, label, risk, rule IDs, hashed sender if WhatsApp. **No text.**
 
 ### 16. Consent and guardian alerts
 
-The owner opts in through `WHATSAPP_OWNER_OPT_IN`; the configured guardian is enabled from environment settings when the dedicated account connects. Obtain and document the guardian's informed agreement outside the app—the app does not verify it. There is no guardian command or `STOP` flow; disable owner opt-in and stop both services to stop monitoring. Guardian alerts are generic and contain neither message content nor sender ID. Rate limit: 3 reservations/hour per sender; identical payloads are suppressed for 24 hours.
+The owner opts in through `WHATSAPP_OWNER_OPT_IN`; the configured guardian is enabled from environment settings when the dedicated account connects. Obtain and document the guardian's informed agreement outside the app—the app does not verify it. There is no guardian command or `STOP` flow; disable owner opt-in and stop both services to stop monitoring. Guardian alerts are generic and contain neither message content nor sender ID. There is no hourly per-sender cap; identical payloads from the same sender are suppressed for 24 hours.
 
 ### 17. Which WhatsApp transport shipped?
 
@@ -112,16 +120,38 @@ Pinned source hashes, split membership SHA-256, model manifests, `random_state=4
 
 No. Unverified custom labels, URL confounding, no live WhatsApp, OCR misses, English-heavy scam proxy. It is a course-complete prototype with honest limits.
 
+### 26. Walk through FastAPI from click to response
+
+`backend/app/main.py` creates the FastAPI application, adds configured CORS and upload-size middleware, then mounts the health, analysis, file, dashboard, and WhatsApp routers under `/api`. When the user clicks Analyze, `frontend/src/api.ts` sends a JSON request to `POST /api/analyze/text`; for a file it sends multipart `FormData` to `POST /api/analyze/file`. FastAPI matches the path to a router, Pydantic validates the request, and the router calls services rather than implementing the ML itself. The service runs preprocessing, model/rule analysis, and risk fusion. A declared `response_model` validates the response before FastAPI serializes it as JSON. The frontend renders that JSON result. OpenAPI is available at `/openapi.json`, with interactive Swagger UI at `/docs`.
+
+**If asked about specific FastAPI features:** Pydantic models provide request validation; `response_model` keeps responses within the API contract; `Depends(authenticate)` protects bridge endpoints; `UploadFile` handles multipart input; CORS allows the configured frontend origin; `UploadLimitMiddleware` rejects oversized bodies before multipart parsing; and `HTTPException` reports explicit failures such as invalid input, unsupported files, or unavailable models. The file route uses async upload reads and sends blocking extraction work to a thread pool.
+
+**Where to point:** `backend/app/main.py` → `backend/app/routers/analyze.py` → `backend/app/schemas.py` → `backend/app/services/text_analysis.py` → `frontend/src/api.ts`.
+
+### 27. Where is the training dataset? Can you show it?
+
+The project includes the preparation, training, and evaluation scripts, but the raw text corpora and processed splits are intentionally not committed. `backend/data/raw/` and `backend/data/processed/` are Git-ignored; `backend/ml/data_prep.py` expects the approved files at the paths listed in `docs/DATASETS.md` and does not download them. This checkout currently has six synthetic media demo fixtures in the raw folder, but no processed text splits. I can show `docs/DATASETS.md` for sources, licenses, schemas, and label mappings, plus `docs/DATASET_INVENTORY.json` for aggregate source evidence. Those inventory/results files do not contain the raw message rows, so a full training run needs the approved datasets to be supplied locally.
+
 ---
 
 ## C. File map if they open the laptop
 
 | Topic | Path |
 |---|---|
-| API contract | `backend/app/schemas.py` |
-| Risk formula | `backend/app/services/risk_engine.py` |
-| Rules | `backend/app/resources/rules.yaml` |
-| Preprocess | `backend/app/services/preprocess.py` |
-| Frontend API | `frontend/src/api.ts` |
+| Analyze screen | `frontend/src/pages/Analyze.tsx` |
+| Frontend API boundary | `frontend/src/api.ts` |
+| FastAPI app, middleware, router registration | `backend/app/main.py`, `backend/app/upload_limit.py` |
+| API route and contract | `backend/app/routers/analyze.py`, `backend/app/schemas.py` |
+| Roman Urdu preprocessing | `backend/app/services/preprocess.py` |
+| Text analysis and ML inference | `backend/app/services/text_analysis.py`, `backend/app/services/classifier.py` |
+| Expert system | `backend/app/services/expert_rules.py`, `backend/app/resources/rules.yaml` |
+| URL and risk pipeline | `backend/app/services/url_features.py`, `backend/app/services/url_classifier.py`, `backend/app/services/risk_engine.py` |
+| Media extraction | `backend/app/routers/files.py`, `backend/app/services/media.py`, `backend/app/services/media_text.py` |
+| Dashboard API | `backend/app/routers/dashboard.py` |
+| Training and evaluation | `backend/ml/data_prep.py`, `backend/ml/train_text.py`, `backend/ml/evaluate.py` |
+| Dataset sources and aggregate inventory | `docs/DATASETS.md`, `docs/DATASET_INVENTORY.json` |
+| WhatsApp transport and policy | `whatsapp/bridge.mjs`, `backend/app/routers/whatsapp.py`, `backend/app/services/alert_policy.py` |
 | Test numbers | `docs/FINAL_RESULTS.json` |
 | Report | `report/Nigehbaan_AI_CCP_Report.md` |
+
+For roles of the remaining tracked files, use section 21, “Complete tracked file-by-file guide,” in `docs/PROJECT_EXPLANATION.md`. Focus on the runtime path and training/evaluation scripts first; you do not need to memorize generated artifacts or lockfile contents.

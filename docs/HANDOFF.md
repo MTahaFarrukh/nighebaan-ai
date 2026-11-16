@@ -455,3 +455,56 @@ data behavior changed. Motion respects reduced-motion preferences.
 Verification: frontend lint and production build passed. Browser confirmed the Home hero renders,
 scan animation is active normally and removed by reduced-motion, the 390px layout has no
 horizontal overflow, and Dashboard cards use the glass blur treatment.
+
+## WhatsApp alert hourly cap removal - 2026-11-16
+
+Removed the per-sender three-alerts-per-hour cap at the user's request. Distinct eligible alerts
+are no longer hourly-limited; same-sender, same-message duplicates remain suppressed for 24 hours.
+Owner opt-in, guardian consent, medium/high risk eligibility, and `DRY_RUN` behavior are unchanged.
+Updated TECH_DOC and expanded the WhatsApp policy regression to verify more than three distinct
+alerts remain eligible while duplicates and revoked consent are still blocked.
+
+Verification: `python -m pytest tests\test_whatsapp.py -q` passed (3 tests); Ruff passed for the
+changed Python files; `git diff --check` passed. Restart the backend before live testing. Live
+WhatsApp delivery is not re-verified here.
+
+## Viva project walkthrough refresh - 2026-11-16
+
+The project explanation already covered the technology stack and preprocessing, but did not make
+the requested screen-to-stack-to-code walkthrough explicit. Added a viva sequence and ordered file
+map to the explanation and viva sheet, with conditional wording for hosted versus local demo use.
+Corrected the viva notes for the current medium/high alert policy, metadata history, and removed
+hourly cap. No application behavior changed.
+
+Verification: documentation-only update; `git diff --check` passed.
+
+## Complete tracked-file viva guide - 2026-11-16
+
+Added section 21 to `docs/PROJECT_EXPLANATION.md`, a subsystem-grouped guide to all 230 tracked
+files, and linked it from `report/VIVA.md`. It distinguishes source and test files from generated
+aggregate artifacts, clarifies that raw text data and local model binaries are not tracked, and
+explicitly identifies `backend/ml/train.py` as a placeholder rather than a working trainer. No
+application code or data was changed.
+
+Verification: parsed the appendix and confirmed all 230 entries exist and match the 230 Git-tracked
+files exactly; no listed paths are missing. `git diff --check` passed. No tests were run because
+this milestone changes documentation only.
+
+## Dataset availability viva notes - 2026-11-16
+
+Documented that raw text corpora and processed splits are not tracked, while preparation/training
+scripts, dataset source/license/schema documentation, and aggregate inventory are available. The
+current raw folder contains six synthetic media demo fixtures; no processed text split folder is
+present. Added a concise viva answer and the expected local input paths. No dataset contents were
+read or changed.
+
+Verification: confirmed `docs/DATASET_INVENTORY.json` exists; `git diff --check` passed.
+
+## FastAPI viva explanation - 2026-11-16
+
+Expanded the project explanation with the FastAPI request lifecycle: app setup, middleware, router
+registration, endpoint groups, Pydantic validation, service calls, response models, OpenAPI, and
+error handling. Added a concise FastAPI viva answer and its file path map. Hosted deployment wording
+remains conditional; no cloud deployment was verified.
+
+Verification: documentation-only update; `git diff --check` passed.

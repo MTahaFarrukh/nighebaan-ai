@@ -59,12 +59,6 @@ def reserve(guardian: str, sender: str, digest: str) -> str:
             (guardian, sender, digest),
         ).fetchone():
             return "duplicate"
-        count = db.execute(
-            "SELECT count(*) FROM reservations WHERE guardian=? AND sender=? AND ts>?",
-            (guardian, sender, now - 3600),
-        ).fetchone()[0]
-        if count >= 3:
-            return "rate_limited"
         db.execute(
             "INSERT INTO reservations VALUES (?,?,?,?)", (guardian, sender, digest, now)
         )

@@ -321,13 +321,13 @@ Errors: consistent JSON `{error: {code, message}}`, proper status codes (400 val
 1. `whatsapp/` connects with Baileys (QR pairing, multi-file auth state in a git-ignored folder).
 2. On `messages.upsert`: skip own messages, status broadcasts, and (by default) groups. Detect type: text, audio, image, document (PDF), video.
 3. Text → `POST /api/whatsapp/event`; media → download buffer, send as multipart.
-4. Backend returns result and alert decision. If `should_alert` (risk ≥ `ALERT_THRESHOLD`, default 0.70), the service sends:
+4. Backend returns the result and alert decision. Medium- and high-risk results (default thresholds 0.35 and 0.70) can reserve an alert after consent and duplicate checks. If `should_alert` and `DRY_RUN=false`, the service sends:
    - **to the protected user:** warning + short reasons;
    - **to the guardian:** a generic warning to contact the account owner. **Never the message content or sender identifier.**
 5. Backend stores an alert row (no text).
 
 ### 12.2 Alert policy (`services/alert_policy.py`)
-- Only alert on **high** risk. Per-sender rate limit (e.g., max 3 alerts/hour) and dedupe of identical content hashes.
+- Alerts are eligible at **medium** or **high** risk. There is no per-sender hourly cap; an identical message from the same sender is suppressed for 24 hours. Owner opt-in and guardian consent are still required.
 - `DRY_RUN=true` logs the alert instead of sending (default in dev).
 - Keep `DRY_RUN=true` until the account owner has opted in, the recipient has agreed, and thresholds have been reviewed.
 
@@ -419,7 +419,7 @@ Rule of thumb: finish M0-M6 before spending time on M7-M9. The project must alre
 
 ## 17. Testing Strategy
 
-- **Unit:** each preprocessing function; each rule (one positive and one negative example); URL features; risk engine thresholds and overrides; alert policy (rate limit, consent).
+- **Unit:** each preprocessing function; each rule (one positive and one negative example); URL features; risk engine thresholds and overrides; alert policy (duplicate suppression, consent).
 - **API contract:** response matches `schemas.py` for every endpoint; error cases.
 - **ML smoke test:** loads artifact, predicts a known scam and a known normal sentence.
 - **Frontend:** type-check, lint, build must pass; manual QA checklist for each page.
@@ -454,7 +454,7 @@ MAX_VIDEO_SECONDS=60
 | Whisper outputs Urdu script | Voice path weaker | Urdu-script lexicon for rules + transliteration; state limitation |
 | Baileys ban / instability | Demo failure | Dedicated number, `DRY_RUN`, simulator, Telegram fallback |
 | Heavy models on a laptop | Slow demo | Whisper `small` int8, size/duration caps, lazy-load models |
-| False alerts to guardian | Trust loss | High threshold, rate limit, consent, explanation |
+| False alerts to guardian | Trust loss | Risk threshold, duplicate suppression, consent, explanation |
 | Time overrun | Incomplete project | Milestone order M0-M6 first; multimodal and WhatsApp are layers |
 
 ---

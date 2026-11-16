@@ -86,11 +86,9 @@ def test_bridge_policy(tmp_path, monkeypatch, fake_text_model):
     assert "example.com" not in result["alert_guardian_text"]
     assert "example.com" not in str(result)
     assert event()["reason"] == "duplicate"
-    for suffix in (" first", " second"):
+    for suffix in (" first", " second", " third", " fourth"):
         body["text"] += suffix
         assert event()["should_alert"]
-    body["text"] += " third"
-    assert event()["reason"] == "rate_limited"
     client.post(
         "/api/consent",
         json={"guardian": body["guardian"], "enabled": False},
