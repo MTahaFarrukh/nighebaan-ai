@@ -17,7 +17,6 @@ dashboard and an optional WhatsApp bridge.
 
 <p>
   <a href="docs/TECH_DOC.md">Technical design</a> ·
-  <a href="docs/DEMO.md">Demo guide</a> ·
   <a href="docs/MEDIA.md">Media setup</a> ·
   <a href="docs/HANDOFF.md">Project handoff</a>
 </p>
