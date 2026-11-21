@@ -37,6 +37,10 @@ backend/data/raw/*
 backend/models/*.pkl
 backend/models/*.joblib
 !backend/models/.gitkeep
+!backend/models/text_clf.joblib
+!backend/models/text_clf.manifest.json
+!backend/models/url_clf.joblib
+!backend/models/url_clf.manifest.json
 
 # OS / IDE
 .DS_Store
@@ -52,6 +56,8 @@ backend/data/processed/*
 whatsapp/auth*/
 
 backend/models/**/*.joblib
+!backend/models/text_clf.joblib
+!backend/models/url_clf.joblib
 
 backend/data/runtime/
 

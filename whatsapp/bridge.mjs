@@ -43,9 +43,11 @@ function normalizeJid(value) {
   return normalized.replace(/:\d+(?=@s\.whatsapp\.net$)/, "");
 }
 
+const backendBase = (env.BACKEND_API_URL || "http://127.0.0.1:8000/api").replace(/\/$/, "");
+
 async function api(path, body) {
   const json = body !== undefined && !(body instanceof FormData);
-  const response = await fetch("http://127.0.0.1:8000/api" + path, {
+  const response = await fetch(backendBase + path, {
     method: body === undefined ? "GET" : "POST",
     headers: { "X-API-Key": key, ...(json ? { "Content-Type": "application/json" } : {}) },
     body: json ? JSON.stringify(body) : body,
